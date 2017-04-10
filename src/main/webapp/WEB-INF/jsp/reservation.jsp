@@ -45,7 +45,7 @@
 </head>
 <body>
 <form action="./reservation_handler" method="post">
-    <h1 align="center">Epam-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
+    <h1 align="center">Java-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
 
     <label>
         <p align="center">Choose date and book comfortable room:</p>

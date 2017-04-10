@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Epam-hotel</title>
+    <title>Java-hotel</title>
     <script>
         var ns6=document.getElementById&&!document.all?1:0;
         var folder='';
@@ -15,7 +15,7 @@
     </script>
 </head>
 <body>
-<h1 align="center">Welcome to the Epam-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
+<h1 align="center">Welcome to the Java-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
 
 <label>
     <p align="center">

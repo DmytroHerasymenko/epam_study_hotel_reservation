@@ -5,19 +5,36 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <filter>
-        <filter-name>mySessionFilter</filter-name>
-        <filter-class>ua.study.epam.filters.SessionFilter</filter-class>
+        <filter-name>urlFilter</filter-name>
+        <filter-class>ua.study.filters.UrlFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>mySessionFilter</filter-name>
+        <filter-name>urlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>sessionFilter</filter-name>
+        <filter-class>ua.study.filters.SessionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sessionFilter</filter-name>
         <servlet-name>hotel</servlet-name>
     </filter-mapping>
+
     <servlet>
         <servlet-name>hotel</servlet-name>
-        <servlet-class>ua.study.epam.servlet.ServletDispatcher</servlet-class>
+        <servlet-class>ua.study.servlet.ServletDispatcher</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>hotel</servlet-name>
-        <url-pattern>/service/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <!--<error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/404.html</location>
+    </error-page>-->
 </web-app>
