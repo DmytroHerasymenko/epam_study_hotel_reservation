@@ -14,7 +14,7 @@
     <p align="center">${requestScope.error}</p>
 
     <label for="name">
-        <p align="center">Name and surname
+        <p align="center">Surname
 
         <input type="text" name="name" id="name" pattern="[a-Zа-Я]+" minlength="3" required>
         </p>

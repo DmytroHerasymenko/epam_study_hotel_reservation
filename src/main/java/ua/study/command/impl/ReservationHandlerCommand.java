@@ -1,7 +1,8 @@
-package ua.study.command;
+package ua.study.command.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.study.command.Command;
 import ua.study.domain.Reservation;
 import ua.study.command.validation.Validator;
 import ua.study.domain.enums.ReservationStatus;
@@ -16,11 +17,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
 
 /**
  * Created by dima on 03.04.17.
  */
 public class ReservationHandlerCommand implements Command {
+    private final Properties properties = new Properties();
     private static final Logger LOGGER = LogManager.getLogger(ReservationHandlerCommand.class.getName());
     private final Validator validator;
 
@@ -30,17 +33,18 @@ public class ReservationHandlerCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
+        init();
         HttpSession session = request.getSession();
         if(!validator.isSessionValid(session)){
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+            RequestDispatcher requestDispatcher =
+                    request.getRequestDispatcher(properties.getProperty("req.login"));
             request.setAttribute("error", "session closed");
             requestForward(requestDispatcher, request, response);
             return;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         int[] reservedRooms = new int[6];
-        LocalDate arrive;
-        LocalDate departure;
+        LocalDate arrive, departure;
         try {
             reservedRooms[0] = Integer.parseInt(request.getParameter("st_single"));
             reservedRooms[1] = Integer.parseInt(request.getParameter("st_double"));
@@ -52,14 +56,16 @@ public class ReservationHandlerCommand implements Command {
             departure = LocalDate.parse(request.getParameter("departureDatepicker"), formatter);
         } catch (IllegalArgumentException e){
             LOGGER.error(e.getMessage());
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp");
-            request.setAttribute("error", "all fields should be filled correct");
+            RequestDispatcher requestDispatcher =
+                    request.getRequestDispatcher(properties.getProperty("req.reserv"));
+            request.setAttribute("error", properties.getProperty("error.fields"));
             requestForward(requestDispatcher, request, response);
             return;
         }
         if(validator.isReservationDataIllegal(arrive, departure, reservedRooms)) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp");
-            request.setAttribute("error", "all fields should be filled correct");
+            RequestDispatcher requestDispatcher =
+                    request.getRequestDispatcher(properties.getProperty("req.reserv"));
+            request.setAttribute("error", properties.getProperty("error.fields"));
             requestForward(requestDispatcher, request, response);
             return;
         }
@@ -70,21 +76,25 @@ public class ReservationHandlerCommand implements Command {
                 arrive, departure, reservedRooms);
 
         if(reservation == null) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp");
-            request.setAttribute("error", "reservation cancelled, try one more time");
+            RequestDispatcher requestDispatcher =
+                    request.getRequestDispatcher(properties.getProperty("req.reserv"));
+            request.setAttribute("error", properties.getProperty("error.cancel"));
             requestForward(requestDispatcher, request, response);
             return;
         }
         if(reservation.getStatus() == ReservationStatus.CONFIRMED) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/bill.jsp");
-            request.setAttribute("arrive", arrive);
-            request.setAttribute("departure", departure);
-            request.setAttribute("reservationId", reservation.getReservationId());
-            requestForward(requestDispatcher, request, response);
+            session.setAttribute("arrive", arrive);
+            session.setAttribute("departure", departure);
+            session.setAttribute("reservationId", reservation.getReservationId());
+            try {
+                response.sendRedirect("./bill");
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
         } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp");
-            request.setAttribute("error", "sorry, we do not have enough rooms on the selected dates. " +
-                    "Try to choose another room category.");
+            RequestDispatcher requestDispatcher =
+                    request.getRequestDispatcher(properties.getProperty("req.reserv"));
+            request.setAttribute("error", properties.getProperty("error.full"));
             requestForward(requestDispatcher, request, response);
         }
     }
@@ -95,6 +105,14 @@ public class ReservationHandlerCommand implements Command {
             requestDispatcher.forward(request, response);
         } catch (ServletException e) {
             LOGGER.error(e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    private void init(){
+        try {
+            properties.load(getClass().getResourceAsStream("/req.properties"));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

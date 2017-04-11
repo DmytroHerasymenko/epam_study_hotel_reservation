@@ -1,7 +1,8 @@
-package ua.study.command;
+package ua.study.command.impl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.study.command.Command;
 import ua.study.command.validation.Validator;
 import ua.study.domain.User;
 import ua.study.service.LoginService;
@@ -11,12 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by dima on 31.03.17.
  */
 public class LoginHandlerCommand implements Command {
-    private static final Logger LOGGER = LogManager.getLogger(LoginHandlerCommand.class.getName());
+    private final Logger LOGGER = LogManager.getLogger(LoginHandlerCommand.class.getName());
     private final Validator validator;
 
     public LoginHandlerCommand(Validator validator){
@@ -46,6 +48,7 @@ public class LoginHandlerCommand implements Command {
             responseRedirect(response, "./login");
         } else {
             session.setAttribute("login", client.getLogin());
+            session.setAttribute("name", client.getName());
             responseRedirect(response, "./reservation");
         }
     }

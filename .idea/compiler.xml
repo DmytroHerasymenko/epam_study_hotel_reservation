@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="epamStudyProjectHotelReservation" />
+        <module name="studyProjectHotelReservation" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="epamStudyProjectHotelReservation" target="1.8" />
+      <module name="studyProjectHotelReservation" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

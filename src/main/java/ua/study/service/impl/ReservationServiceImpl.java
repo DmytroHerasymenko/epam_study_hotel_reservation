@@ -1,16 +1,12 @@
 package ua.study.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.study.dao.DaoFactory;
-import ua.study.dao.impl.ReservationDaoImpl;
-import ua.study.dao.impl.ReservedRoomDaoImpl;
-import ua.study.dao.impl.RoomTypeDaoImpl;
-import ua.study.dao.impl.UserDaoImpl;
+import ua.study.dao.impl.*;
 import ua.study.dao.impl.transaction_helper.TransactionHelper;
-import ua.study.domain.Reservation;
-import ua.study.domain.ReservedRoom;
+import ua.study.domain.*;
 import ua.study.domain.enums.ReservationStatus;
-import ua.study.domain.RoomType;
-import ua.study.domain.User;
 import ua.study.domain.enums.Bedspace;
 import ua.study.domain.enums.RoomCategory;
 import ua.study.service.ReservationService;
@@ -23,48 +19,83 @@ import java.util.List;
  * Created by dima on 04.04.17.
  */
 public class ReservationServiceImpl implements ReservationService {
+    private static final Logger LOGGER = LogManager.getLogger(ReservationServiceImpl.class.getName());
     private List<RoomType> roomTypes;
+    private List<Room> rooms;
 
     @Override
     public Reservation reservation(String clientLogin, LocalDate arrive, LocalDate departure,
                                    int[] reservedRooms) {
         DaoFactory factory = DaoFactory.getInstance();
 
-        ReservationDaoImpl reservationDao = factory.getDao("ReservationDao", ReservationDaoImpl.class);
-        UserDaoImpl clientDao = factory.getDao("UserDao", UserDaoImpl.class);
-        ReservedRoomDaoImpl reservedRoomDao = factory.getDao("ReservedRoomDao", ReservedRoomDaoImpl.class);
-        RoomTypeDaoImpl roomTypeDao = factory.getDao("RoomTypeDao", RoomTypeDaoImpl.class);
-
+        ReservationDao reservationDao = factory.getDao("ReservationDao", ReservationDao.class);
+        UserDao clientDao = factory.getDao("UserDao", UserDao.class);
+        ReservedRoomDao reservedRoomDao = factory.getDao("ReservedRoomDao", ReservedRoomDao.class);
+        RoomTypeDao roomTypeDao = factory.getDao("RoomTypeDao", RoomTypeDao.class);
+        BillDao billDao = factory.getDao("BillDao", BillDao.class);
+        RoomDao roomDao = factory.getDao("RoomDao", RoomDao.class);
         getRoomTypes(roomTypeDao);
+        getRooms(roomDao);
         Reservation reservation = getReservation(clientDao, clientLogin, arrive, departure);
 
         TransactionHelper.getInstance().beginTransaction();
         Long reservationId = reservationDao.insert(reservation);
-        if(reservationId == null){
-            TransactionHelper.getInstance().rollbackTransaction();
-            TransactionHelper.getInstance().closeTransaction();
-            return null;
-        }
+        if(reservationId == null) return rollback();
         List<ReservedRoom> reservedRoomsList = getReservedRooms(reservedRooms, reservationId);
-        boolean isSuccess = reservedRoomDao.insert(reservedRoomsList);
-
-        if(!isSuccess){
-            TransactionHelper.getInstance().rollbackTransaction();
-            TransactionHelper.getInstance().closeTransaction();
-            return null;
-        }
+        Boolean isSuccess = reservedRoomDao.insert(reservedRoomsList);
+        if(!isSuccess) return rollback();
         TransactionHelper.getInstance().commitTransaction();
         TransactionHelper.getInstance().closeTransaction();
 
         Reservation checkedReservation = new Reservation();
         checkedReservation.setReservationId(reservationId);
-        ///////////////////////////////
-        checkedReservation.setStatus(checkDates(reservationDao, reservation, reservedRooms));
+        checkedReservation.setStatus(checkDates(reservedRoomsList, reservationDao, reservedRoomDao,
+                reservation, reservedRooms));
         updateReservationStatus(reservationDao, checkedReservation);
+        insertBill(billDao, reservationId, reservedRoomsList);
         return checkedReservation;
     }
 
-    private boolean updateReservationStatus(ReservationDaoImpl reservationDao, Reservation reservation){
+    @Override
+    public List<Room> getAllRooms(){
+        return rooms;
+    }
+    @Override
+    public List<RoomType> getAllRoomTypes(){
+        return roomTypes;
+    }
+
+    private Reservation rollback(){
+        TransactionHelper.getInstance().rollbackTransaction();
+        TransactionHelper.getInstance().closeTransaction();
+        return null;
+    }
+
+    private boolean insertBill(BillDao billDao, Long reservationId, List<ReservedRoom> reservedRooms){
+        int totalPrice = 0;
+        Bill bill = new Bill();
+        bill.setReservationId(reservationId);
+        for(ReservedRoom rr : reservedRooms){
+            totalPrice += getRoomTypePrice(rr.getRoomTypeId());
+        }
+        bill.setTotalPrice(totalPrice);
+        TransactionHelper.getInstance().beginTransaction();
+        boolean isSuccess = billDao.insert(bill);
+        TransactionHelper.getInstance().commitTransaction();
+        TransactionHelper.getInstance().closeTransaction();
+        return isSuccess;
+    }
+
+    private int getRoomTypePrice(long id){
+        for(RoomType rt : roomTypes){
+            if(rt.getRoomTypeId() == id){
+                return rt.getPrice();
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private boolean updateReservationStatus(ReservationDao reservationDao, Reservation reservation){
         TransactionHelper.getInstance().beginTransaction();
         boolean isSuccess = reservationDao.update(reservation);
         TransactionHelper.getInstance().commitTransaction();
@@ -72,14 +103,14 @@ public class ReservationServiceImpl implements ReservationService {
         return isSuccess;
     }
 
-    private Reservation getReservation(UserDaoImpl clientDao, String clientLogin,
+    private Reservation getReservation(UserDao clientDao, String clientLogin,
                                        LocalDate arrive, LocalDate departure){
 
         Reservation reservation = new Reservation();
         User user = new User();
         user.setLogin(clientLogin);
         TransactionHelper.getInstance().beginTransaction();
-        User client = clientDao.getClientByLogin(user);
+        User client = clientDao.get(user);
         TransactionHelper.getInstance().commitTransaction();
         TransactionHelper.getInstance().closeTransaction();
         reservation.setClientId(client.getUserId());
@@ -89,24 +120,43 @@ public class ReservationServiceImpl implements ReservationService {
         return reservation;
     }
 
-    private List<RoomType> getRoomTypes(RoomTypeDaoImpl roomTypeDao){
+    private List<RoomType> getRoomTypes(RoomTypeDao roomTypeDao){
         if(roomTypes == null){
             TransactionHelper.getInstance().beginTransaction();
-            roomTypes = roomTypeDao.getRoomTypes();
+            roomTypes = roomTypeDao.get();
             TransactionHelper.getInstance().commitTransaction();
             TransactionHelper.getInstance().closeTransaction();
         }
         return roomTypes;
     }
 
-    private ReservationStatus checkDates(ReservationDaoImpl reservationDao, Reservation reservation,
-                                   int[] reservedRooms){
+    private List<Room> getRooms(RoomDao roomDao){
+        if(rooms == null){
+            TransactionHelper.getInstance().beginTransaction();
+            rooms = roomDao.get();
+            TransactionHelper.getInstance().commitTransaction();
+            TransactionHelper.getInstance().closeTransaction();
+        }
+        return rooms;
+    }
+
+    private ReservationStatus checkDates(List<ReservedRoom> reservedRoomsList, ReservationDao reservationDao,
+                                         ReservedRoomDao reservedRoomDao, Reservation reservation,
+                                         int[] reservedRooms){
 
         TransactionHelper.getInstance().beginTransaction();
         List<ReservedRoom> confirmedReservedRooms = reservationDao.checkDates(reservation);
         TransactionHelper.getInstance().commitTransaction();
         TransactionHelper.getInstance().closeTransaction();
-        return countReservedRoomTypes(reservedRooms, confirmedReservedRooms);
+        ReservationStatus status = countReservedRoomTypes(reservedRooms, confirmedReservedRooms);
+
+        if(status == ReservationStatus.CONFIRMED){
+            TransactionHelper.getInstance().beginTransaction();
+            reservedRoomDao.update(setRoomNumbers(reservedRoomsList, confirmedReservedRooms));
+            TransactionHelper.getInstance().commitTransaction();
+            TransactionHelper.getInstance().closeTransaction();
+        }
+        return status;
     }
 
     private List<ReservedRoom> getReservedRooms(int[] reservedRooms, Long reservationId){
@@ -145,6 +195,35 @@ public class ReservationServiceImpl implements ReservationService {
                 return roomType.getRoomTypeId();
         }
         return null;
+    }
+
+    private List<ReservedRoom> setRoomNumbers(List<ReservedRoom> reservedRoomsList,
+                                              List<ReservedRoom> confirmedReservedRooms){
+        List<Room> freeRooms = new ArrayList<>();
+        freeRooms.addAll(rooms);
+        int size;
+        for(ReservedRoom rr : confirmedReservedRooms){
+            size = freeRooms.size();
+            for(int i=0; i < size;i++){
+                if(freeRooms.get(i).getRoomNumber() == rr.getRoomNumber()){
+                    freeRooms.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
+        for(ReservedRoom rr : reservedRoomsList){
+            size = freeRooms.size();
+            for(int i = 0; i < size; i++){
+                if(rr.getRoomTypeId() == freeRooms.get(i).getRoomTypeId()){
+                    rr.setRoomNumber(freeRooms.get(i).getRoomNumber());
+                    freeRooms.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
+        return reservedRoomsList;
     }
 
     private ReservationStatus countReservedRoomTypes(int[] reservedRooms,

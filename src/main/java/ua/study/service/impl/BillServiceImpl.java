@@ -3,13 +3,8 @@ package ua.study.service.impl;
 import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.transaction_helper.TransactionHelper;
 import ua.study.domain.Bill;
-import ua.study.domain.Reservation;
-import ua.study.domain.ReservedRoom;
-import ua.study.dao.impl.BillDaoImpl;
-import ua.study.domain.User;
+import ua.study.dao.impl.BillDao;
 import ua.study.service.BillService;
-
-import java.util.List;
 
 /**
  * Created by dima on 09.04.17.
@@ -17,30 +12,13 @@ import java.util.List;
 public class BillServiceImpl implements BillService {
 
     @Override
-    public Bill bill() {
-
+    public Bill bill(Long reservationId) {
         DaoFactory factory = DaoFactory.getInstance();
-        BillDaoImpl billDao = factory.getDao("BillDao", BillDaoImpl.class);
+        BillDao billDao = factory.getDao("BillDao", BillDao.class);
         TransactionHelper.getInstance().beginTransaction();
-        //billDao.getBillBy
+        Bill bill = billDao.get(reservationId);
         TransactionHelper.getInstance().commitTransaction();
         TransactionHelper.getInstance().closeTransaction();
-
-        return null;
-    }
-
-    @Override
-    public User getClient() {
-        return null;
-    }
-
-    @Override
-    public Reservation getReservation() {
-        return null;
-    }
-
-    @Override
-    public List<ReservedRoom> getReservedRooms() {
-        return null;
+        return bill;
     }
 }

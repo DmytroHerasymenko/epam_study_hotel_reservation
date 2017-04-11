@@ -8,9 +8,7 @@ import org.postgresql.ds.PGConnectionPoolDataSource;
  * Created by dima on 28.03.17.
  */
 public abstract class DataSourceFactory {
-
     private static final Logger LOGGER = LogManager.getLogger(DataSourceFactory.class);
-
 
     private static final String DRIVER = "org.postgresql.Driver";
     private static final String URL = "jdbc:postgresql://127.0.0.1/hoteldb";

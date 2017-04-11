@@ -38,8 +38,8 @@ public class Validator {
                 reservedRooms[4] == 0 && reservedRooms[5] == 0){
             return true;
         }
-        return arrive.isBefore(LocalDate.now()) || departure.isBefore(arrive.plusDays(1))
-                || departure.isAfter(arrive.plusDays(30))
+        return arrive.isBefore(LocalDate.now()) || arrive.isAfter(LocalDate.now().plusDays(30))
+                || departure.isBefore(arrive.plusDays(1)) || departure.isAfter(arrive.plusDays(30))
                 || reservedRooms[0] < 0 || reservedRooms[0] > 5 || reservedRooms[1] < 0 || reservedRooms[1] > 5
                 || reservedRooms[2] < 0 || reservedRooms[2] > 5 || reservedRooms[3] < 0 || reservedRooms[3] > 3
                 || reservedRooms[4] < 0 || reservedRooms[4] > 3 || reservedRooms[5] < 0 || reservedRooms[5] > 2;

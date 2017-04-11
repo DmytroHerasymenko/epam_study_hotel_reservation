@@ -14,6 +14,7 @@
                 changeMonth: true,
                 numberOfMonths: 1,
                 minDate: 0,
+                maxDate: 30,
                 onSelect: function(selectedDate) {
                     var minDate = $.datepicker.parseDate("dd.mm.yy", selectedDate);
                     minDate.setDate(minDate.getDate()+1);

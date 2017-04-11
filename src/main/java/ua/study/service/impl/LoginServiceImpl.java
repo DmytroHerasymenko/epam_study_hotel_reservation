@@ -2,7 +2,7 @@ package ua.study.service.impl;
 
 import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.transaction_helper.TransactionHelper;
-import ua.study.dao.impl.UserDaoImpl;
+import ua.study.dao.impl.UserDao;
 import ua.study.domain.User;
 import ua.study.service.LoginService;
 
@@ -14,7 +14,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public User loginAndPasswordVerify(String login, String password){
         DaoFactory factory = DaoFactory.getInstance();
-        UserDaoImpl clientDao = factory.getDao("UserDao", UserDaoImpl.class);
+        UserDao clientDao = factory.getDao("UserDao", UserDao.class);
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);

@@ -34,11 +34,11 @@ public class DaoFactoryImpl implements DaoFactory {
     }
 
     private void init(){
-        daoMap.put("BillDao", new BillDaoImpl());
-        daoMap.put("ReservationDao", new ReservationDaoImpl());
-        daoMap.put("ReservedRoomDao", new ReservedRoomDaoImpl());
-        daoMap.put("RoomDao", new RoomDaoImpl());
-        daoMap.put("RoomTypeDao", new RoomTypeDaoImpl());
-        daoMap.put("UserDao", new UserDaoImpl());
+        daoMap.put("BillDao", new BillDao());
+        daoMap.put("ReservationDao", new ReservationDao());
+        daoMap.put("ReservedRoomDao", new ReservedRoomDao());
+        daoMap.put("RoomDao", new RoomDao());
+        daoMap.put("RoomTypeDao", new RoomTypeDao());
+        daoMap.put("UserDao", new UserDao());
     }
 }

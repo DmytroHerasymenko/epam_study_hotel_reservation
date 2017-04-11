@@ -14,7 +14,6 @@ public class Reservation {
     private LocalDate arrivingDate;
     private LocalDate departureDate;
     private ReservationStatus status;
-    //private long administratorId;
 
     public long getReservationId() {
         return reservationId;
@@ -63,12 +62,4 @@ public class Reservation {
     public void setStatus(ReservationStatus status) {
         this.status = status;
     }
-
-    /*public long getAdministratorId() {
-        return administratorId;
-    }
-
-    public void setAdministratorId(long administratorId) {
-        this.administratorId = administratorId;
-    }*/
 }

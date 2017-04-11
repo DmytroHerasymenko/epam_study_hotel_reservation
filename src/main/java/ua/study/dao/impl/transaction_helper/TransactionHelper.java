@@ -13,8 +13,6 @@ public class TransactionHelper {
 
     private static final Logger LOGGER = LogManager.getLogger(TransactionHelper.class.getName());
 
-    //private final ThreadLocal<Integer> transactionCount = new ThreadLocal<>();
-
     private final ThreadLocal<ConnectionProxy> connectionThreadLocal = new ThreadLocal<>();
     private static TransactionHelper instance = new TransactionHelper();
 
@@ -39,7 +37,6 @@ public class TransactionHelper {
                 LOGGER.error(e.getMessage());
             }
         }
-        //transactionCount.get()++;
         connectionProxy.begin();
     }
 
@@ -52,7 +49,6 @@ public class TransactionHelper {
     }
 
     public void closeTransaction(){
-        //transactionCount.get()--;
         getConnection().close();
         connectionThreadLocal.remove();
     }

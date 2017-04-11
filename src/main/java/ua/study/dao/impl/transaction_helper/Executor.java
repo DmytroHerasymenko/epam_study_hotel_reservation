@@ -43,8 +43,7 @@ public class Executor {
         return value;
     }
 
-    public <T> T getUser(String query, String login,
-                         ResultHandler<T> handler) {
+    public <T> T getUser(String query, String login, ResultHandler<T> handler) {
         T value = null;
         try {
             Connection connection = TransactionHelper.getInstance().getConnection().getConnection();
@@ -60,14 +59,13 @@ public class Executor {
         return value;
     }
 
-    public <T> T verifyUser(String query, String login,
-                            String password, ResultHandler<T> handler) {
+    public <T> T verifyUser(String query, User domain, ResultHandler<T> handler) {
         T value = null;
         try {
             Connection connection = TransactionHelper.getInstance().getConnection().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, login);
-            statement.setString(2, password);
+            statement.setString(1, domain.getLogin());
+            statement.setString(2, domain.getPassword());
             ResultSet result = statement.executeQuery();
             value = handler.handle(result);
             result.close();
@@ -99,6 +97,24 @@ public class Executor {
         }
     }
 
+    public boolean reservedRoomUpdate(List<ReservedRoom> reservedRooms, String update){
+        try {
+            Connection connection = TransactionHelper.getInstance().getConnection().getConnection();
+            PreparedStatement statement = connection.prepareStatement(update);
+            for(ReservedRoom reservedRoom : reservedRooms){
+                statement.setInt(1, reservedRoom.getRoomNumber());
+                statement.setLong(2, reservedRoom.getReservationId());
+                statement.setLong(3, reservedRoom.getRoomTypeId());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+            return true;
+        } catch (SQLException e) {
+                LOGGER.error(e.getMessage());
+                return false;
+            }
+        }
+
     public boolean reservedRoomInsert(List<ReservedRoom> reservedRooms, String update){
         try {
             Connection connection = TransactionHelper.getInstance().getConnection().getConnection();
@@ -123,7 +139,21 @@ public class Executor {
             preparedStatement.setString(1, domain.getName());
             preparedStatement.setString(2, domain.getLogin());
             preparedStatement.setString(3, domain.getPassword());
-            //preparedStatement.setString(4, domain.getUserRole().name());
+            preparedStatement.execute();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean roomInsert(String insert){
+        try {
+            Connection connection = TransactionHelper.getInstance().getConnection().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(insert);
+            preparedStatement.setInt(1, 201);
+            preparedStatement.setLong(2, 1);
+            preparedStatement.setBoolean(3, false);
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {

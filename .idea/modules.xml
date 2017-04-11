@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/epamStudyProjectHotelReservation.iml" filepath="$PROJECT_DIR$/epamStudyProjectHotelReservation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/studyProjectHotelReservation.iml" filepath="$PROJECT_DIR$/studyProjectHotelReservation.iml" />
     </modules>
   </component>
 </project>

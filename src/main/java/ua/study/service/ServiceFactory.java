@@ -1,9 +1,6 @@
 package ua.study.service;
 
-import ua.study.service.impl.BillServiceImpl;
-import ua.study.service.impl.LoginServiceImpl;
-import ua.study.service.impl.RegistrationServiceImpl;
-import ua.study.service.impl.ReservationServiceImpl;
+import ua.study.service.impl.*;
 
 /**
  * Created by dima on 30.03.17.
@@ -16,6 +13,7 @@ public class ServiceFactory {
     private final LoginService loginService = new LoginServiceImpl();
     private final ReservationService reservationService = new ReservationServiceImpl();
     private final BillService billService = new BillServiceImpl();
+    private final ReservedRoomService reservedRoomService = new ReservedRoomServiceImpl();
 
     private ServiceFactory(){}
 
@@ -37,5 +35,9 @@ public class ServiceFactory {
 
     public BillService getBillService(){
         return billService;
+    }
+
+    public ReservedRoomService getReservedRoomService(){
+        return reservedRoomService;
     }
 }

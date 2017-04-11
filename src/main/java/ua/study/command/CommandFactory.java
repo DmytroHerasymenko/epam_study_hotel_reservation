@@ -1,5 +1,6 @@
 package ua.study.command;
 
+import ua.study.command.impl.*;
 import ua.study.command.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +28,10 @@ public class CommandFactory {
         commands.put("login_handler", new LoginHandlerCommand(validator));
         commands.put("reservation", new ReservationCommand(validator));
         commands.put("reservation_handler", new ReservationHandlerCommand(validator));
+        commands.put("bill", new BillCommand(validator));
     }
 
     public Command getCommand(HttpServletRequest request){
-        //String[] command = request.getRequestURI().split("/");
-        //return commands.get(command[3]);
         String command = request.getRequestURI().replace("/service/", "");
         return commands.get(command);
     }
