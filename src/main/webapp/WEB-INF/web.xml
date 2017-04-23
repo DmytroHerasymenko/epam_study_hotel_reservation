@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+    <display-name>Archetype Created Web Application</display-name>
+
+    <filter>
+        <filter-name>urlFilter</filter-name>
+        <filter-class>ua.study.filters.UrlFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>urlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>signInFilter</filter-name>
+        <filter-class>ua.study.filters.SignInFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>signInFilter</filter-name>
+        <url-pattern>/dates</url-pattern>
+        <url-pattern>/dates_handler</url-pattern>
+        <url-pattern>/reservation</url-pattern>
+        <url-pattern>/reservation_handler</url-pattern>
+        <url-pattern>/bill</url-pattern>
+        <url-pattern>/bill_handler</url-pattern>
+        <url-pattern>/my_reservations</url-pattern>
+    </filter-mapping>
+   <!-- <filter>
+        <filter-name>errorFilter</filter-name>
+        <filter-class>ua.study.filters.ErrorFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>errorFilter</filter-name>
+        <servlet-name>hotel</servlet-name>
+    </filter-mapping>-->
+
+    <servlet>
+        <servlet-name>hotel</servlet-name>
+        <servlet-class>ua.study.servlet.ServletDispatcher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hotel</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!--<error-page>
+        <location>/WEB-INF/jsp/bad_request.jsp</location>
+    </error-page>-->
+</web-app>
