@@ -112,7 +112,7 @@ public class Executor {
         }
     }
 
-    public <T> T getReservation(String query, User domain, ResultHandler<T> handler) {
+    public <T> T getByLogin(String query, User domain, ResultHandler<T> handler) {
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
             statement.setString(1, domain.getLogin());
@@ -144,22 +144,6 @@ public class Executor {
         }
     }
 
-    public <T> T getUser(String query, User domain, ResultHandler<T> handler) {
-        ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
-        try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
-            statement.setString(1, domain.getLogin());
-            ResultSet result = statement.executeQuery();
-            T value = handler.handle(result);
-            result.close();
-            return value;
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-            throw new IllegalStateException("some problem with execute query", e);
-        } finally {
-            close(connectionProxy);
-        }
-    }
-
     public <T> T verifyUser(String query, User domain, ResultHandler<T> handler) {
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
@@ -177,7 +161,7 @@ public class Executor {
         }
     }
 
-    public <T> T getFreeRooms(String query, Reservation domain, ResultHandler<T> handler) {
+    public <T> T getFreeRoomTypes(String query, Reservation domain, ResultHandler<T> handler) {
         Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
         Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();

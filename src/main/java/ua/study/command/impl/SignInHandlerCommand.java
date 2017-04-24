@@ -35,9 +35,6 @@ public class SignInHandlerCommand implements Command {
             return;
         }
         session.setAttribute("client", client);
-        //остается тот же реквест и респонс
         request.getRequestDispatcher("/WEB-INF/jsp/check_dates.jsp").include(request, response);
-        //request.getRequestDispatcher("/dates").include(request, response);
-        //response.sendRedirect("./dates");
     }
 }

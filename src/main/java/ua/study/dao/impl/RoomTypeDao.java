@@ -9,6 +9,8 @@ import ua.study.domain.enums.Bedspace;
 import ua.study.domain.enums.RoomCategory;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -29,26 +31,13 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
         getExecutor().executorUpdate(properties.getProperty("create.room_type"));
     }
 
-    private boolean insert(){
-        getExecutor().executorUpdate(properties.getProperty("st_single.room_type"));
-        getExecutor().executorUpdate(properties.getProperty("st_double.room_type"));
-        getExecutor().executorUpdate(properties.getProperty("st_twin.room_type"));
-        getExecutor().executorUpdate(properties.getProperty("su_double.room_type"));
-        getExecutor().executorUpdate(properties.getProperty("su_twin.room_type"));
-        return getExecutor().executorUpdate(properties.getProperty("de_double.room_type"));
-    }
-
     public List<RoomType> get(){
-        String getRoomTypesSql = properties.getProperty("get.room_type");
+        String getRoomTypes = properties.getProperty("get.room_type");
         List<RoomType> roomTypes = new ArrayList<>();
-        getExecutor().executorQuery(getRoomTypesSql, result -> {
+        getExecutor().executorQuery(getRoomTypes, result -> {
             if(!(result.next())) return null;
             do {
-                RoomType roomType = new RoomType();
-                roomType.setRoomTypeId(result.getInt(1));
-                roomType.setRoomCategory(RoomCategory.valueOf(result.getString(2)));
-                roomType.setBedspace(Bedspace.valueOf(result.getString(3)));
-                roomType.setPrice(result.getInt(4));
+                RoomType roomType = getRoomType(result);
                 roomTypes.add(roomType);
             } while(result.next());
             return roomTypes;
@@ -57,27 +46,32 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
     }
 
     public Map<RoomType, Integer> getFreeRoomTypes(Reservation domain){
-        String query = "SELECT COUNT(room_id), room_type_id FROM rooms " +
-                " WHERE room_number NOT IN (SELECT room_number FROM " +
-                "reserved_rooms rr JOIN reservations r ON r.reservation_id = rr.reservation_id WHERE " +
+        String query = "SELECT r.room_type_id, rt.room_category, rt.bedspace, rt.price, COUNT(r.room_id) " +
+                "FROM rooms r JOIN room_types rt ON r.room_type_id=rt.room_type_id " +
+                "WHERE r.room_number NOT IN (SELECT room_number FROM " +
+                "reserved_rooms rr JOIN reservations res ON res.reservation_id = rr.reservation_id WHERE " +
                 "(arriving_date <= ? AND departure_date > ?) OR " +
                 "(arriving_date < ? AND departure_date >= ?) OR " +
-                "(? <= arriving_date AND ? > arriving_date)) GROUP BY room_type_id ORDER BY room_type_id";
-        //List<Room> rooms = new ArrayList<>();
+                "(? <= arriving_date AND ? > arriving_date)) GROUP BY r.room_type_id ORDER BY r.room_type_id";
         Map<RoomType, Integer> freeRoomTypes = new LinkedHashMap<>();
-        getExecutor().getFreeRooms(query, domain, result -> {
+        getExecutor().getFreeRoomTypes(query, domain, result -> {
             if(!(result.next())) return null;
             do {
-                //Room room = new Room();
-                RoomType roomType = new RoomType();
-                //room.setRoomNumber(result.getInt(1));
-                roomType.setRoomTypeId(result.getInt(2));
-                //room.setBalcony(result.getBoolean(3));
-                freeRoomTypes.put(roomType, result.getInt(1));
+                RoomType roomType = getRoomType(result);
+                freeRoomTypes.put(roomType, result.getInt(5));
             } while (result.next());
             return freeRoomTypes;
         });
         return freeRoomTypes;
+    }
+
+    private RoomType getRoomType(ResultSet result) throws SQLException {
+        RoomType roomType = new RoomType();
+        roomType.setRoomTypeId(result.getInt(2));
+        roomType.setRoomCategory(RoomCategory.valueOf(result.getString(3)));
+        roomType.setBedspace(Bedspace.valueOf(result.getString(4)));
+        roomType.setPrice(result.getInt(5));
+        return roomType;
     }
 
     private void init(){

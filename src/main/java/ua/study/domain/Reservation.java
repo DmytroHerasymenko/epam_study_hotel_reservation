@@ -12,7 +12,7 @@ public class Reservation {
     private LocalDate reservationDate;
     private LocalDate arrivingDate;
     private LocalDate departureDate;
-    private List<ReservedRoom> reservedRoomList;
+    private List<ReservedRoom> reservedRooms;
 
     public long getReservationId() {
         return reservationId;
@@ -54,11 +54,11 @@ public class Reservation {
         this.departureDate = departureDate;
     }
 
-    public List<ReservedRoom> getReservedRoomList() {
-        return reservedRoomList;
+    public List<ReservedRoom> getReservedRooms() {
+        return reservedRooms;
     }
 
-    public void setReservedRoomList(List<ReservedRoom> reservedRoomList) {
-        this.reservedRoomList = reservedRoomList;
+    public void setReservedRooms(List<ReservedRoom> reservedRooms) {
+        this.reservedRooms = reservedRooms;
     }
 }

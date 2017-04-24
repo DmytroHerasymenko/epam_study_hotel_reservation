@@ -2,14 +2,17 @@ package ua.study.service.impl;
 
 import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.ReservationDao;
+import ua.study.dao.impl.ReservedRoomDao;
+import ua.study.dao.impl.UserDao;
 import ua.study.dao.impl.executor.TransactionHelper;
 import ua.study.domain.Reservation;
+import ua.study.domain.ReservedRoom;
 import ua.study.domain.RoomType;
 import ua.study.domain.User;
 import ua.study.service.Service;
-import ua.study.service.ServiceFactory;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,25 +24,16 @@ public class ReservationService implements Service {
     public Reservation reservation(String login, LocalDate arrive, LocalDate departure,
                                    Map<RoomType, Integer> reservedRoomTypes){
         ReservationDao reservationDao = DaoFactory.getInstance().getDao("ReservationDao", ReservationDao.class);
-        ReservedRoomService reservedRoomService =
-                ServiceFactory.getInstance().getService("ReservedRoomService", ReservedRoomService.class);
-        UserService userService = ServiceFactory.getInstance().getService("UserService", UserService.class);
-        User user = userService.getUserByLogin(login);
-
-
-        Reservation reservation = new Reservation();
-        reservation.setClientId(user.getUserId());
-        reservation.setArrivingDate(arrive);
-        reservation.setDepartureDate(departure);
+        UserDao userDao = DaoFactory.getInstance().getDao("UserDao", UserDao.class);
+        User domain = new User();
+        domain.setLogin(login);
+        User user = userDao.get(domain);
+        Reservation reservation = getReservation(user.getUserId(), arrive, departure);
 
         TransactionHelper.getInstance().beginTransaction();
         Long reservationId = (reservationDao.insert(reservation));
-        /*if(reservationId == null){
-            TransactionHelper.getInstance().rollbackTransaction();
-            return null;
-        }*/
         reservation.setReservationId(reservationId);
-        boolean isSuccess = reservedRoomService.reservation(reservation, reservedRoomTypes);
+        boolean isSuccess = reservationRooms(reservation, reservedRoomTypes);
         if(!isSuccess){
             TransactionHelper.getInstance().rollbackTransaction();
             return null;
@@ -53,5 +47,29 @@ public class ReservationService implements Service {
         User user = new User();
         user.setLogin(login);
         return reservationDao.get(user);
+    }
+
+    private boolean reservationRooms(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
+        ReservedRoomDao reservedRoomDao =
+                DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
+        List<ReservedRoom> reservedRooms = new ArrayList<>();
+        ReservedRoom reservedRoom;
+        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
+            for(int i = 0; i < entry.getValue(); i++){
+                reservedRoom = new ReservedRoom();
+                reservedRoom.setRoomTypeId(entry.getKey().getRoomTypeId());
+                reservedRoom.setReservationId(reservation.getReservationId());
+                reservedRooms.add(reservedRoom);
+            }
+        }
+        return reservedRoomDao.insert(reservedRooms);
+    }
+
+    private Reservation getReservation(Long clientId, LocalDate arrive, LocalDate departure){
+        Reservation reservation = new Reservation();
+        reservation.setClientId(clientId);
+        reservation.setArrivingDate(arrive);
+        reservation.setDepartureDate(departure);
+        return reservation;
     }
 }

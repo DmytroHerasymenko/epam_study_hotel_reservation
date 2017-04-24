@@ -27,11 +27,4 @@ public class UserService implements Service {
         user.setPassword(password);
         return userDao.verifyUserByLoginAndPassword(user);
     }
-
-    public User getUserByLogin(String login){
-        UserDao userDao = DaoFactory.getInstance().getDao("UserDao", UserDao.class);
-        User user = new User();
-        user.setLogin(login);
-        return userDao.get(user);
-    }
 }

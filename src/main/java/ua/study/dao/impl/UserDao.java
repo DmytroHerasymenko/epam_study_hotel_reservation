@@ -32,7 +32,7 @@ public class UserDao extends AbstractDao<User> {
     }
 
     public User get(User domain){
-        return (User) getExecutor().getUser(properties.getProperty("get.user"), domain, new ResultHandlerUser());
+        return (User) getExecutor().getByLogin(properties.getProperty("get.user"), domain, new ResultHandlerUser());
     }
 
     public User verifyUserByLoginAndPassword(User domain){

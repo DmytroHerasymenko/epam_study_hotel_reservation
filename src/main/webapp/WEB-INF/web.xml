@@ -26,15 +26,6 @@
         <url-pattern>/bill_handler</url-pattern>
         <url-pattern>/my_reservations</url-pattern>
     </filter-mapping>
-   <!-- <filter>
-        <filter-name>errorFilter</filter-name>
-        <filter-class>ua.study.filters.ErrorFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>errorFilter</filter-name>
-        <servlet-name>hotel</servlet-name>
-    </filter-mapping>-->
-
     <servlet>
         <servlet-name>hotel</servlet-name>
         <servlet-class>ua.study.servlet.ServletDispatcher</servlet-class>

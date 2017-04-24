@@ -31,20 +31,10 @@ public class ReservationDao extends AbstractDao<Reservation> {
         return getExecutor().insertReservation(domain, properties.getProperty("insert.reservation"));
     }
 
-    private void init(){
-        try {
-            properties.load(getClass().getResourceAsStream("/sql.properties"));
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        }
-    }
-
-
     public List<Reservation> get(User domain){
-        String query = "SELECT * FROM reservations r JOIN users u ON r.client_id = u.user_id WHERE login = ?";
-
+        String query = properties.getProperty("get.reservation");
         List<Reservation> reservations = new ArrayList<>();
-        getExecutor().getReservation(query, domain, result -> {
+        getExecutor().getByLogin(query, domain, result -> {
             if(!(result.next())) return null;
             do {
                 Reservation reservation = new Reservation();
@@ -60,4 +50,11 @@ public class ReservationDao extends AbstractDao<Reservation> {
         return reservations;
     }
 
+    private void init(){
+        try {
+            properties.load(getClass().getResourceAsStream("/sql.properties"));
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
 }

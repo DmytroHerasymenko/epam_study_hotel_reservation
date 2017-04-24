@@ -35,19 +35,4 @@ public class BillDao extends AbstractDao<Bill> {
             LOGGER.error(e.getMessage());
         }
     }
-
-    /*public Bill get(Long reservationId){
-        String getBill = properties.getProperty("get.bill");
-        Bill bill = new Bill();
-
-        getExecutor().getBill(getBill, reservationId, result -> {
-            if(!(result.next())) return null;
-            bill.setBillId(result.getLong(1));
-            bill.setReservationId(result.getLong(2));
-            bill.setBillingDate(result.getDate(3).toLocalDate());
-            bill.setTotalPrice(result.getInt(4));
-            return bill;
-        });
-        return bill;
-    }*/
 }
