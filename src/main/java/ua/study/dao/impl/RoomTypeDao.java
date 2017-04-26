@@ -46,13 +46,7 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
     }
 
     public Map<RoomType, Integer> getFreeRoomTypes(Reservation domain){
-        String query = "SELECT r.room_type_id, rt.room_category, rt.bedspace, rt.price, COUNT(r.room_id) " +
-                "FROM rooms r JOIN room_types rt ON r.room_type_id=rt.room_type_id " +
-                "WHERE r.room_number NOT IN (SELECT room_number FROM " +
-                "reserved_rooms rr JOIN reservations res ON res.reservation_id = rr.reservation_id WHERE " +
-                "(arriving_date <= ? AND departure_date > ?) OR " +
-                "(arriving_date < ? AND departure_date >= ?) OR " +
-                "(? <= arriving_date AND ? > arriving_date)) GROUP BY r.room_type_id ORDER BY r.room_type_id";
+        String query = properties.getProperty("get.free_room_type");
         Map<RoomType, Integer> freeRoomTypes = new LinkedHashMap<>();
         getExecutor().getFreeRoomTypes(query, domain, result -> {
             if(!(result.next())) return null;
@@ -67,10 +61,10 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
 
     private RoomType getRoomType(ResultSet result) throws SQLException {
         RoomType roomType = new RoomType();
-        roomType.setRoomTypeId(result.getInt(2));
-        roomType.setRoomCategory(RoomCategory.valueOf(result.getString(3)));
-        roomType.setBedspace(Bedspace.valueOf(result.getString(4)));
-        roomType.setPrice(result.getInt(5));
+        roomType.setRoomTypeId(result.getInt(1));
+        roomType.setRoomCategory(RoomCategory.valueOf(result.getString(2)));
+        roomType.setBedspace(Bedspace.valueOf(result.getString(3)));
+        roomType.setPrice(result.getDouble(4));
         return roomType;
     }
 

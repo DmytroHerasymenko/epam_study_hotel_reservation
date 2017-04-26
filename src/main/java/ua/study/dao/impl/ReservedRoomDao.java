@@ -3,10 +3,14 @@ package ua.study.dao.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.study.dao.AbstractDao;
+import ua.study.dao.impl.executor.ResultHandler;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
+import ua.study.domain.User;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -27,21 +31,31 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
         getExecutor().executorUpdate(properties.getProperty("create.res_room"));
     }
 
-    public boolean insert(List<ReservedRoom> reservedRooms) {
-        String insert = "INSERT INTO reserved_rooms res (reservation_id, room_type_id, room_number) " +
-                "VALUES (?,?, (SELECT room_number FROM rooms rooms WHERE res.room_type_id = rooms.room_type_id " +
-                "AND rooms.room_number NOT IN (SELECT room_number FROM " +
-                "reserved_rooms rr JOIN reservations r ON r.reservation_id = rr.reservation_id WHERE " +
-                "(arriving_date <= ? AND departure_date > ?) OR " +
-                "(arriving_date < ? AND departure_date >= ?) OR " +
-                "(? <= arriving_date AND ? > arriving_date))))";
-        return getExecutor().insertReservedRoom(reservedRooms, insert);
+    public boolean insert(Reservation reservation, List<ReservedRoom> reservedRooms) {
+        return getExecutor().insertReservedRoom(reservation, reservedRooms, properties.getProperty("insert.res_room"));
     }
 
     public List<ReservedRoom> get(Reservation domain){
         String query = properties.getProperty("get.res_room");
-        List<ReservedRoom> reservedRooms = new ArrayList<>();
-        return getExecutor().getReservedRoom(query, domain, result -> {
+        return (List) getExecutor().getReservedRoom(query, domain, new ResultHandlerReservedRoom());
+    }
+
+    public List<ReservedRoom> getUserReservedRooms(User domain){
+        String query = properties.getProperty("get.user_res_room");
+        return (List) getExecutor().getByLogin(query, domain, new ResultHandlerReservedRoom());
+    }
+
+    private void init(){
+        try {
+            properties.load(getClass().getResourceAsStream("/sql.properties"));
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    private class ResultHandlerReservedRoom implements ResultHandler {
+        public List<ReservedRoom> handle(ResultSet result) throws SQLException {
+            List<ReservedRoom> reservedRooms = new ArrayList<>();
             if(!(result.next())) return null;
             do {
                 ReservedRoom reservedRoom = new ReservedRoom();
@@ -52,14 +66,6 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
                 reservedRooms.add(reservedRoom);
             } while (result.next());
             return reservedRooms;
-        });
-    }
-
-    private void init(){
-        try {
-            properties.load(getClass().getResourceAsStream("/sql.properties"));
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
         }
     }
 }

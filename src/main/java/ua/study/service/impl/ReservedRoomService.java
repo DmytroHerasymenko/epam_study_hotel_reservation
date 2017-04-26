@@ -4,6 +4,7 @@ import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.ReservedRoomDao;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
+import ua.study.domain.User;
 import ua.study.service.Service;
 
 import java.util.List;
@@ -18,5 +19,13 @@ public class ReservedRoomService implements Service {
         ReservedRoomDao reservedRoomDao =
                 DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
         return reservedRoomDao.get(reservation);
+    }
+
+    public List<ReservedRoom> getUserReservedRooms(String login) {
+        User user = new User();
+        user.setLogin(login);
+        ReservedRoomDao reservedRoomDao =
+                DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
+        return reservedRoomDao.getUserReservedRooms(user);
     }
 }

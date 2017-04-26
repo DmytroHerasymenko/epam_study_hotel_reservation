@@ -28,8 +28,12 @@ public class BillHandlerCommand implements Command {
         billService.bill(bill);
         request.setAttribute("reservation", reservation);
         request.setAttribute("totalPrice", totalPrice);
+        request.setAttribute("reservedRoomTypes", session.getAttribute("reservedRoomTypes"));
+        request.setAttribute("rooms", session.getAttribute("rooms"));
         session.removeAttribute("reservation");
         session.removeAttribute("totalPrice");
+        session.removeAttribute("reservedRoomTypes");
+        session.removeAttribute("rooms");
         request.getRequestDispatcher("/WEB-INF/jsp/confirmation.jsp").include(request, response);
     }
 }

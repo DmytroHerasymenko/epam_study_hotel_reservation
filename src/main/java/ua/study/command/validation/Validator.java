@@ -7,6 +7,8 @@ import ua.study.domain.RoomType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,21 +53,23 @@ public class Validator {
         return isArriveValid && isDepartureValid;
     }
 
-    public boolean isReservedRoomsQuantityValid(Object reservedRoomTypesMap){
-        Map<RoomType, Integer> reservedRoomTypes;
+    public boolean isReservedRoomsQuantityValid(List<String> reservedRoomsQuantity){
+       List<Integer> roomsQuantity = new ArrayList<>();
         try {
-            reservedRoomTypes = (Map<RoomType, Integer>) reservedRoomTypesMap;
-        } catch (IllegalArgumentException e) {
+            for(String quantity : reservedRoomsQuantity){
+                roomsQuantity.add(Integer.valueOf(quantity));
+            }
+        } catch (NumberFormatException e) {
             LOGGER.error(e.getMessage());
             return false;
         }
-        return isReservedRoomQuantityPositive(reservedRoomTypes) && isAnyRoomReserved(reservedRoomTypes);
+        return isReservedRoomQuantityPositive(roomsQuantity) && isAnyRoomReserved(roomsQuantity);
     }
 
-    private boolean isReservedRoomQuantityPositive(Map<RoomType, Integer> reservedRoomTypes){
+    private boolean isReservedRoomQuantityPositive(List<Integer> reservedRoomTypes){
         boolean isValid = true;
-        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
-            if(entry.getValue() < 0) {
+        for(Integer quantity : reservedRoomTypes){
+            if(quantity < 0) {
                 isValid = false;
                 break;
             }
@@ -73,10 +77,10 @@ public class Validator {
         return isValid;
     }
 
-    private boolean isAnyRoomReserved(Map<RoomType, Integer> reservedRoomTypes){
+    private boolean isAnyRoomReserved(List<Integer> reservedRoomTypes){
         boolean isValid = false;
-        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
-            if(entry.getValue() > 0) {
+        for(Integer quantity : reservedRoomTypes){
+            if(quantity > 0) {
                 isValid = true;
                 break;
             }

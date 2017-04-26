@@ -11,7 +11,7 @@ import java.sql.Statement;
 /**
  * Created by dima on 04.04.17.
  */
-public class ConnectionProxy implements AutoCloseable {
+public class ConnectionProxy {
     private final Connection connection;
     private final Logger LOGGER = LogManager.getLogger(ConnectionProxy.class.getName());
 

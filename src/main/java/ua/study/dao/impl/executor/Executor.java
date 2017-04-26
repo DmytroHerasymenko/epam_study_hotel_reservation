@@ -61,12 +61,14 @@ public class Executor {
         }
     }
 
-    public boolean insertReservedRoom(List<ReservedRoom> reservedRooms, String query){
+    public boolean insertReservedRoom(Reservation reservation, List<ReservedRoom> reservedRooms, String query){
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
             for(ReservedRoom reservedRoom : reservedRooms){
-                statement.setLong(1, reservedRoom.getReservationId());
-                statement.setInt(2, reservedRoom.getRoomTypeId());
+                setTimestamp(reservation, statement);
+                statement.setInt(7, reservedRoom.getRoomTypeId());
+                statement.setLong(8, reservedRoom.getReservationId());
+                statement.setInt(9, reservedRoom.getRoomTypeId());
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -88,7 +90,7 @@ public class Executor {
             return true;
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return false;
+            throw new IllegalStateException("some problem with execute query", e);
         } finally {
             close(connectionProxy);
         }
@@ -162,16 +164,17 @@ public class Executor {
     }
 
     public <T> T getFreeRoomTypes(String query, Reservation domain, ResultHandler<T> handler) {
-        Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
-        Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());
+        /*Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
+        Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());*/
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
-            statement.setTimestamp(1, arrive);
+            /*statement.setTimestamp(1, arrive);
             statement.setTimestamp(2, arrive);
             statement.setTimestamp(3, departure);
             statement.setTimestamp(4, departure);
             statement.setTimestamp(5, arrive);
-            statement.setTimestamp(6, departure);
+            statement.setTimestamp(6, departure);*/
+            setTimestamp(domain, statement);
             ResultSet result = statement.executeQuery();
             T value = handler.handle(result);
             result.close();
@@ -182,6 +185,17 @@ public class Executor {
         } finally {
             close(connectionProxy);
         }
+    }
+
+    private void setTimestamp(Reservation domain, PreparedStatement statement) throws SQLException {
+        Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
+        Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());
+        statement.setTimestamp(1, arrive);
+        statement.setTimestamp(2, arrive);
+        statement.setTimestamp(3, departure);
+        statement.setTimestamp(4, departure);
+        statement.setTimestamp(5, arrive);
+        statement.setTimestamp(6, departure);
     }
 
     private void close(ConnectionProxy connectionProxy){

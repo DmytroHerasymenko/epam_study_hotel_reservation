@@ -62,7 +62,7 @@ public class ReservationService implements Service {
                 reservedRooms.add(reservedRoom);
             }
         }
-        return reservedRoomDao.insert(reservedRooms);
+        return reservedRoomDao.insert(reservation, reservedRooms);
     }
 
     private Reservation getReservation(Long clientId, LocalDate arrive, LocalDate departure){
