@@ -7,6 +7,8 @@ import ua.study.dao.impl.executor.ResultHandler;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
 import ua.study.domain.User;
+import ua.study.domain.enums.Bedspace;
+import ua.study.domain.enums.RoomCategory;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -59,10 +61,11 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
             if(!(result.next())) return null;
             do {
                 ReservedRoom reservedRoom = new ReservedRoom();
-                reservedRoom.setReservedRoomId(result.getLong(1));
-                reservedRoom.setReservationId(result.getLong(2));
-                reservedRoom.setRoomTypeId(result.getInt(3));
-                reservedRoom.setRoomId(result.getInt(4));
+                reservedRoom.setReservationId(result.getLong(1));
+                reservedRoom.setRoomCategory(RoomCategory.valueOf(result.getString(2)));
+                reservedRoom.setBedspace(Bedspace.valueOf(result.getString(3)));
+                reservedRoom.setRoomNumber(result.getInt(4));
+                reservedRoom.setPrice(result.getDouble(5));
                 reservedRooms.add(reservedRoom);
             } while (result.next());
             return reservedRooms;

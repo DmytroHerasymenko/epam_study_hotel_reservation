@@ -51,10 +51,9 @@ public class UserDao extends AbstractDao<User> {
         public User handle(ResultSet result) throws SQLException {
             if(!(result.next())) return null;
             User client = new User();
-            client.setUserId(result.getLong(1));
-            client.setName(result.getString(2));
-            client.setLogin(result.getString(3));
-            client.setPassword(result.getString(4));
+            client.setName(result.getString(1));
+            client.setLogin(result.getString(2));
+            client.setPassword(result.getString(3));
             return client;
         }
     }

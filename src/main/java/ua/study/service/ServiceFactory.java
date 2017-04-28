@@ -32,7 +32,6 @@ public class ServiceFactory {
         services.put("BillService", new BillService());
         services.put("ReservationService", new ReservationService());
         services.put("ReservedRoomService", new ReservedRoomService());
-        services.put("RoomService", new RoomService());
         services.put("RoomTypeService", new RoomTypeService());
         services.put("UserService", new UserService());
     }

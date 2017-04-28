@@ -1,4 +1,4 @@
-package ua.study.filters;
+package ua.study.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -4,18 +4,9 @@ package ua.study.domain;
  * Created by dima on 28.03.17.
  */
 public class User {
-    private long userId;
     private String name;
     private String login;
     private String password;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 
     public String getName() {
         return name;

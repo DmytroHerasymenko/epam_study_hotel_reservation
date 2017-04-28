@@ -8,8 +8,7 @@ import java.util.List;
  */
 public class Reservation {
     private long reservationId;
-    private long clientId;
-    private LocalDate reservationDate;
+    private String clientLogin;
     private LocalDate arrivingDate;
     private LocalDate departureDate;
     private List<ReservedRoom> reservedRooms;
@@ -22,20 +21,12 @@ public class Reservation {
         this.reservationId = reservationId;
     }
 
-    public long getClientId() {
-        return clientId;
+    public String getClientLogin() {
+        return clientLogin;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
-    }
-
-    public LocalDate getReservationDate() {
-        return reservationDate;
-    }
-
-    public void setReservationDate(LocalDate reservationDate) {
-        this.reservationDate = reservationDate;
+    public void setClientLogin(String clientLogin) {
+        this.clientLogin = clientLogin;
     }
 
     public LocalDate getArrivingDate() {

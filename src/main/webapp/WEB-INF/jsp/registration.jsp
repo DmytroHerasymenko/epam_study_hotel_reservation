@@ -1,12 +1,15 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%request.setCharacterEncoding("UTF-8");%>--%>
 <html>
 <head>
+    <%--<meta http-equiv="Content-Type" content="text/html;charset=utf-8">--%>
     <title>Registration Form</title>
 </head>
 <body>
 <form action="./registration_handler" method="post">
     <h1 align="center">Java-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
     <h1 align="center">Registration Form</h1>
+    <h1 align="center">текст на русском</h1>
 
     <label >
             <p align="center">Please, fill all fields correct:</p>
@@ -17,7 +20,7 @@
     <label for="name">
         <p align="center">Name and Surname
 
-        <input type="text" name="name" id="name" pattern="^[A-ZА-Я]{1}[A-Za-zА-Яа-я\s-]+$" minlength="3" maxlength="30" required>
+        <input type="text" name="name" id="name" pattern="^[A-Z]{1}[A-Za-z\s-]+|[А-ЯЁ]{1}[А-Яа-яЁё\s-]+$" minlength="3" maxlength="30" required>
         </p>
 
         <div style="text-align: center">
@@ -32,7 +35,7 @@
     <label for="login">
         <p align="center">Login (e-mail)
 
-        <input type="email" name="login" id="login" minlength="6" required>
+        <input type="email" name="login" id="login" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
         </p>
 
         <div style="text-align: center">
@@ -44,7 +47,7 @@
 
     <label for="password">
         <p align="center">Password
-        <input type="password" name="password" id="password" maxlength="20" minlength="4" required>
+        <input type="password" name="password" id="password" maxlength="20" required>
         </p>
 
         <div style="text-align: center">

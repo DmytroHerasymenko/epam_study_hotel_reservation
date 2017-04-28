@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
     <display-name>Archetype Created Web Application</display-name>
 
     <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>ua.study.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
         <filter-name>urlFilter</filter-name>
-        <filter-class>ua.study.filters.UrlFilter</filter-class>
+        <filter-class>ua.study.filter.UrlFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>urlFilter</filter-name>
@@ -14,7 +27,7 @@
     </filter-mapping>
     <filter>
         <filter-name>signInFilter</filter-name>
-        <filter-class>ua.study.filters.SignInFilter</filter-class>
+        <filter-class>ua.study.filter.SignInFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>signInFilter</filter-name>
@@ -25,6 +38,14 @@
         <url-pattern>/bill</url-pattern>
         <url-pattern>/bill_handler</url-pattern>
         <url-pattern>/my_reservations</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>errorMessageFilter</filter-name>
+        <filter-class>ua.study.filter.ErrorMessageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>errorMessageFilter</filter-name>
+        <servlet-name>hotel</servlet-name>
     </filter-mapping>
     <servlet>
         <servlet-name>hotel</servlet-name>

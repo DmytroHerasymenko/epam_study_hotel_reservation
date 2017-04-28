@@ -1,6 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>--%>
 <html>
 <head>
+    <%--<meta http-equiv="Content-Type" content="text/html;charset=utf-8">--%>
     <title>Authorization</title>
 </head>
 <body>
@@ -21,22 +22,15 @@
     <label for="login">
         <p align="center">Login (e-mail)
 
-        <input type="email" name="login" id="login" minlength="6" required>
+            <input type="email" name="login" id="login" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
         </p>
-
-        <ul class="input-requirements">
-        </ul>
     </label>
 
     <label for="password">
         <p align="center">Password
 
-        <input type="password" name="password" id="password"
-               maxlength="20" minlength="4" required>
+            <input type="password" name="password" id="password" maxlength="20" required>
         </p>
-
-        <ul class="input-requirements">
-        </ul>
     </label>
 
     <br/>

@@ -15,10 +15,10 @@ import java.util.Properties;
 public class DataSource {
     private static final DataSource instance = new DataSource();
     private final PGConnectionPoolDataSource dataSource = new PGConnectionPoolDataSource();
-    private final Properties properties = new Properties();
     private final Logger LOGGER = LogManager.getLogger(DataSource.class.getName());
 
     private DataSource(){
+        Properties properties = new Properties();
         try {
             properties.load(getClass().getResourceAsStream("/db.properties"));
             Class.forName(properties.getProperty("db.driver"));

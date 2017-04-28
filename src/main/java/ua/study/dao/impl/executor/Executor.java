@@ -99,7 +99,7 @@ public class Executor {
     public Long insertReservation(Reservation domain, String query){
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
-            statement.setLong(1, domain.getClientId());
+            statement.setString(1, domain.getClientLogin());
             statement.setTimestamp(2, Timestamp.valueOf(domain.getArrivingDate().atStartOfDay()));
             statement.setTimestamp(3, Timestamp.valueOf(domain.getDepartureDate().atStartOfDay()));
             statement.execute();
@@ -164,16 +164,8 @@ public class Executor {
     }
 
     public <T> T getFreeRoomTypes(String query, Reservation domain, ResultHandler<T> handler) {
-        /*Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
-        Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());*/
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
-            /*statement.setTimestamp(1, arrive);
-            statement.setTimestamp(2, arrive);
-            statement.setTimestamp(3, departure);
-            statement.setTimestamp(4, departure);
-            statement.setTimestamp(5, arrive);
-            statement.setTimestamp(6, departure);*/
             setTimestamp(domain, statement);
             ResultSet result = statement.executeQuery();
             T value = handler.handle(result);

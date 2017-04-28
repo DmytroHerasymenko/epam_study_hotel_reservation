@@ -31,7 +31,7 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
         getExecutor().executorUpdate(properties.getProperty("create.room_type"));
     }
 
-    public List<RoomType> get(){
+    /*public List<RoomType> get(){
         String getRoomTypes = properties.getProperty("get.room_type");
         List<RoomType> roomTypes = new ArrayList<>();
         getExecutor().executorQuery(getRoomTypes, result -> {
@@ -43,7 +43,7 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
             return roomTypes;
         });
         return roomTypes;
-    }
+    }*/
 
     public Map<RoomType, Integer> getFreeRoomTypes(Reservation domain){
         String query = properties.getProperty("get.free_room_type");

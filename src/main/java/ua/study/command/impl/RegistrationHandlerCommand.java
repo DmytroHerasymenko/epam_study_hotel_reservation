@@ -22,17 +22,18 @@ public class RegistrationHandlerCommand implements Command {
 
         if(!Validator.getInstance().isNameValid(name) || !Validator.getInstance().isLoginValid(login)
                 || !Validator.getInstance().isPasswordValid(password)){
-            request.setAttribute("error", "all fields should be filled correct");
-            request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp").include(request, response);
+            request.getSession().setAttribute("error", "all fields should be filled correct");
+            response.sendRedirect("/registration");
             return;
         }
+
         UserService userService = ServiceFactory.getInstance().getService("UserService", UserService.class);
         boolean isSuccess = userService.registration(name, login, password);
         if(!isSuccess){
-            request.setAttribute("error", "login is not unique");
-            request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp").include(request, response);
+            request.getSession().setAttribute("error", "login is not unique");
+            response.sendRedirect("/registration");
             return;
         }
-        request.getRequestDispatcher("/WEB-INF/jsp/sign_in.jsp").include(request, response);
+        response.sendRedirect("/sign_in");
     }
 }

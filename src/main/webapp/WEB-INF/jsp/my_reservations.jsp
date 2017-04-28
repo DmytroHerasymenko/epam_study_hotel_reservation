@@ -1,11 +1,12 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <html>
 <head>
     <title>My Reservations</title>
 </head>
 <body>
+<p align="center">${requestScope.error}</p>
 <div div style="text-align: center">
     <a href="./dates">book a room</a>
 </div>

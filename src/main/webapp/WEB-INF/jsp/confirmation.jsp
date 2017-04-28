@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <html>
 <head>
     <title>Confirmation</title>
 </head>
 <body>
 <h1 align="center">Java-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
+<p align="center">${requestScope.error}</p>
 <div div style="text-align: center">
     Payment was successful! Your reservation:
 </div>
@@ -29,16 +30,7 @@
     <tr>
         <th>rooms: </th>
         <td><c:forEach var="reservedRoom" items="${requestScope.reservation.reservedRooms}">
-            <c:forEach var="roomType" items="${requestScope.reservedRoomTypes}">
-                <c:if test="${reservedRoom.roomTypeId == roomType.key.roomTypeId}">
-                <c:forEach var="room" items="${requestScope.rooms}">
-                    <c:if test="${room.roomId == reservedRoom.roomId}">
-                    ${room.roomNumber}(${roomType.key.roomCategory}, ${roomType.key.bedspace})
-                    </c:if>
-                </c:forEach>
-                    <br/>
-                </c:if>
-            </c:forEach>
+            ${reservedRoom.roomNumber}(${reservedRoom.roomCategory}, ${reservedRoom.bedspace})
         </c:forEach> </td>
     </tr>
     <tr>

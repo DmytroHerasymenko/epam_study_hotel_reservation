@@ -1,5 +1,5 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -37,16 +37,7 @@
     <tr>
         <th>rooms: </th>
         <td><c:forEach var="reservedRoom" items="${sessionScope.reservation.reservedRooms}">
-            <c:forEach var="roomType" items="${sessionScope.reservedRoomTypes}">
-                <c:if test="${reservedRoom.roomTypeId == roomType.key.roomTypeId}">
-                    <c:forEach var="room" items="${sessionScope.rooms}">
-                        <c:if test="${room.roomId == reservedRoom.roomId}">
-                    ${room.roomNumber}(${roomType.key.roomCategory}, ${roomType.key.bedspace})
-                        </c:if>
-                    </c:forEach>
-                    <br/>
-                </c:if>
-        </c:forEach>
+            ${reservedRoom.roomNumber}(${reservedRoom.roomCategory}, ${reservedRoom.bedspace})
         </c:forEach> </td>
     </tr>
     <tr>

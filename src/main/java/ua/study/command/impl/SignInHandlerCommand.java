@@ -23,18 +23,20 @@ public class SignInHandlerCommand implements Command {
         HttpSession session = request.getSession();
 
         if(!Validator.getInstance().isLoginValid(login) || !Validator.getInstance().isPasswordValid(password)) {
-            request.setAttribute("error", "login or password incorrect");
-            request.getRequestDispatcher("/WEB-INF/jsp/sign_in.jsp").include(request, response);
+            session.setAttribute("error", "login or password incorrect");
+            response.sendRedirect("/sign_in");
             return;
         }
+
         UserService userService = ServiceFactory.getInstance().getService("UserService", UserService.class);
         User client = userService.loginAndPasswordVerify(login, password);
         if(client == null){
-            request.setAttribute("error", "wrong login or password");
-            request.getRequestDispatcher("/WEB-INF/jsp/sign_in.jsp").include(request, response);
+            session.setAttribute("error", "wrong login or password");
+            response.sendRedirect("/sign_in");
             return;
         }
+
         session.setAttribute("client", client);
-        request.getRequestDispatcher("/WEB-INF/jsp/check_dates.jsp").include(request, response);
+        response.sendRedirect("/dates");
     }
 }
