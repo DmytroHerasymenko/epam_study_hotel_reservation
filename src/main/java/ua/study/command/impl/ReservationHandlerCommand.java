@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +31,12 @@ public class ReservationHandlerCommand implements Command {
             session.setAttribute("error", "all fields should be filled correct");
             response.sendRedirect("/reservation");
         }
-        String login = String.valueOf(((User) session.getAttribute("client")).getLogin());
+        User client = (User) session.getAttribute("client");
         Reservation reservation = (Reservation) session.getAttribute("reservation");
-        reservation.setClientLogin(login);
+        reservation.setClientLogin(client.getLogin());
 
         Map<Integer, Integer> reservedRoomTypes = getReservedRoomTypes(json);
-        ReservationService reservationService =
-                ServiceFactory.getInstance().getService("ReservationService", ReservationService.class);
+        ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
         reservation = reservationService.reservation(reservation, reservedRoomTypes);
         if(reservation == null) {
             session.setAttribute("error", "sorry, we do not have enough rooms on the selected dates.");
@@ -47,13 +45,11 @@ public class ReservationHandlerCommand implements Command {
         }
         setReservedRooms(reservation);
         session.setAttribute("reservation", reservation);
-        session.setAttribute("totalPrice", totalPrice(reservation));
         response.sendRedirect("/bill");
     }
 
     private void setReservedRooms(Reservation reservation){
-        ReservedRoomService reservedRoomService =
-                ServiceFactory.getInstance().getService("ReservedRoomService", ReservedRoomService.class);
+        ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
         List<ReservedRoom> reservedRooms = reservedRoomService.getReservedRooms(reservation.getReservationId());
         reservation.setReservedRooms(reservedRooms);
     }
@@ -76,14 +72,5 @@ public class ReservationHandlerCommand implements Command {
             reservedRoomTypes.put(Integer.valueOf(entry[0]), Integer.valueOf(entry[1]));
         }
         return reservedRoomTypes;
-    }
-
-    private double totalPrice(Reservation reservation){
-        double totalPrice = 0;
-        for(ReservedRoom reservedRoom : reservation.getReservedRooms()){
-            totalPrice += reservedRoom.getPrice();
-        }
-        double days = ChronoUnit.DAYS.between(reservation.getArrivingDate(), reservation.getDepartureDate());
-        return totalPrice * days;
     }
 }

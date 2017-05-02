@@ -11,7 +11,7 @@ import ua.study.service.Service;
 public class UserService implements Service {
 
     public boolean registration(String name, String login, String password) {
-        UserDao userDao = DaoFactory.getInstance().getDao("UserDao", UserDao.class);
+        UserDao userDao = DaoFactory.getInstance().getDao(UserDao.class);
         User user = new User();
         user.setName(name);
         user.setLogin(login);
@@ -21,7 +21,7 @@ public class UserService implements Service {
 
     public User loginAndPasswordVerify(String login, String password){
         DaoFactory factory = DaoFactory.getInstance();
-        UserDao userDao = factory.getDao("UserDao", UserDao.class);
+        UserDao userDao = factory.getDao(UserDao.class);
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);

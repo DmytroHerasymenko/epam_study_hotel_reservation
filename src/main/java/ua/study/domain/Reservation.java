@@ -1,6 +1,7 @@
 package ua.study.domain;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class Reservation {
     private LocalDate arrivingDate;
     private LocalDate departureDate;
     private List<ReservedRoom> reservedRooms;
+    private double totalPrice;
 
     public long getReservationId() {
         return reservationId;
@@ -51,5 +53,18 @@ public class Reservation {
 
     public void setReservedRooms(List<ReservedRoom> reservedRooms) {
         this.reservedRooms = reservedRooms;
+        for(ReservedRoom reservedRoom : this.reservedRooms){
+            totalPrice += reservedRoom.getPrice();
+        }
+        double stayingPeriod = ChronoUnit.DAYS.between(arrivingDate, departureDate);
+        totalPrice = totalPrice * stayingPeriod;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 public class RoomTypeService implements Service{
 
     public Map<RoomType, Integer> getFreeRoomTypes(LocalDate arrive, LocalDate departure){
-        RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao("RoomTypeDao", RoomTypeDao.class);
+        RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao(RoomTypeDao.class);
         Reservation reservation = new Reservation();
         reservation.setArrivingDate(arrive);
         reservation.setDepartureDate(departure);

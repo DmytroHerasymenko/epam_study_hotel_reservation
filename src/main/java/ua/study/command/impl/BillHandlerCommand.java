@@ -20,18 +20,15 @@ public class BillHandlerCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Reservation reservation = (Reservation) session.getAttribute("reservation");
-        double totalPrice = (double) session.getAttribute("totalPrice");
 
-        BillService billService = ServiceFactory.getInstance().getService("BillService", BillService.class);
+        BillService billService = ServiceFactory.getInstance().getService(BillService.class);
         Bill bill = new Bill();
         bill.setReservationId(reservation.getReservationId());
-        bill.setTotalPrice(totalPrice);
+        bill.setTotalPrice(reservation.getTotalPrice());
         billService.bill(bill);
 
         request.setAttribute("reservation", reservation);
-        request.setAttribute("totalPrice", totalPrice);
         session.removeAttribute("reservation");
-        session.removeAttribute("totalPrice");
         request.getRequestDispatcher("/WEB-INF/jsp/confirmation.jsp").include(request, response);
     }
 }

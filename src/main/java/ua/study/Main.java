@@ -8,12 +8,12 @@ import ua.study.dao.impl.*;
  */
 public class Main {
     public static void main(String[] args) {
-        BillDao billDao = DaoFactory.getInstance().getDao("BillDao", BillDao.class);
-        ReservationDao reservationDao = DaoFactory.getInstance().getDao("ReservationDao", ReservationDao.class);
-        ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
-        RoomDao roomDao = DaoFactory.getInstance().getDao("RoomDao", RoomDao.class);
-        RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao("RoomTypeDao", RoomTypeDao.class);
-        UserDao userDao = DaoFactory.getInstance().getDao("UserDao", UserDao.class);
+        BillDao billDao = DaoFactory.getInstance().getDao(BillDao.class);
+        ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
+        ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
+        RoomDao roomDao = DaoFactory.getInstance().getDao(RoomDao.class);
+        RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao(RoomTypeDao.class);
+        UserDao userDao = DaoFactory.getInstance().getDao(UserDao.class);
         userDao.create();
         roomTypeDao.create();
         roomDao.create();

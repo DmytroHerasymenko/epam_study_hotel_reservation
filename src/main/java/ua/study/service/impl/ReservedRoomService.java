@@ -16,8 +16,7 @@ public class ReservedRoomService implements Service {
     public List<ReservedRoom> getReservedRooms(Long reservationId) {
         Reservation reservation = new Reservation();
         reservation.setReservationId(reservationId);
-        ReservedRoomDao reservedRoomDao =
-                DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
+        ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         return reservedRoomDao.get(reservation);
     }
 
@@ -25,7 +24,7 @@ public class ReservedRoomService implements Service {
         User user = new User();
         user.setLogin(login);
         ReservedRoomDao reservedRoomDao =
-                DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
+                DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         return reservedRoomDao.getUserReservedRooms(user);
     }
 }

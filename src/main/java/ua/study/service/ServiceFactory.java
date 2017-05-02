@@ -12,7 +12,7 @@ public class ServiceFactory {
 
     private static final ServiceFactory instance = new ServiceFactory();
 
-    private final Map<String, Service> services = new HashMap<>();
+    private final Map<Class<? extends Service>, Service> services = new HashMap<>();
 
     private ServiceFactory(){
         init();
@@ -22,17 +22,17 @@ public class ServiceFactory {
         return instance;
     }
 
-    public <T> T getService(String name, Class<T> classDto) {
-        Service service = services.get(name);
+    public <T> T getService(Class<T> classDto) {
+        Service service = services.get(classDto);
         if(service == null) throw new IllegalArgumentException("service not found");
         return classDto.cast(service);
     }
 
     private void init(){
-        services.put("BillService", new BillService());
-        services.put("ReservationService", new ReservationService());
-        services.put("ReservedRoomService", new ReservedRoomService());
-        services.put("RoomTypeService", new RoomTypeService());
-        services.put("UserService", new UserService());
+        services.put(BillService.class, new BillService());
+        services.put(ReservationService.class, new ReservationService());
+        services.put(ReservedRoomService.class, new ReservedRoomService());
+        services.put(RoomTypeService.class, new RoomTypeService());
+        services.put(UserService.class, new UserService());
     }
 }

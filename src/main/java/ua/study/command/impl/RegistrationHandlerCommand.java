@@ -27,7 +27,7 @@ public class RegistrationHandlerCommand implements Command {
             return;
         }
 
-        UserService userService = ServiceFactory.getInstance().getService("UserService", UserService.class);
+        UserService userService = ServiceFactory.getInstance().getService(UserService.class);
         boolean isSuccess = userService.registration(name, login, password);
         if(!isSuccess){
             request.getSession().setAttribute("error", "login is not unique");

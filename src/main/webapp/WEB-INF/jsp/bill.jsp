@@ -19,10 +19,6 @@
 
 <table align="center" id="bill" border="1">
     <tr>
-        <th>billing date: </th>
-        <td><%=java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))%></td>
-    </tr>
-    <tr>
         <th>name: </th>
         <td>${sessionScope.client.name}</td>
     </tr>
@@ -42,7 +38,7 @@
     </tr>
     <tr>
         <th>total price: </th>
-        <td>${sessionScope.totalPrice}$</td>
+        <td>${sessionScope.reservation.totalPrice}$</td>
     </tr>
 </table>
     <div div style="text-align: center">
