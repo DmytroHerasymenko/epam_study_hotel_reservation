@@ -28,7 +28,7 @@ public class SignInHandlerCommand implements Command {
             return;
         }
 
-        UserService userService = ServiceFactory.getInstance().getService("UserService", UserService.class);
+        UserService userService = ServiceFactory.getInstance().getService(UserService.class);
         User client = userService.loginAndPasswordVerify(login, password);
         if(client == null){
             session.setAttribute("error", "wrong login or password");

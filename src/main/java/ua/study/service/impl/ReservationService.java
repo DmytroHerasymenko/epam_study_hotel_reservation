@@ -20,7 +20,7 @@ public class ReservationService implements Service {
 
     public Reservation reservation(Reservation reservation, Map<Integer, Integer> reservedRoomTypes){
 
-        ReservationDao reservationDao = DaoFactory.getInstance().getDao("ReservationDao", ReservationDao.class);
+        ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
 
         TransactionHelper.getInstance().beginTransaction();
         Long reservationId = reservationDao.insert(reservation);
@@ -35,15 +35,14 @@ public class ReservationService implements Service {
     }
 
     public List<Reservation> getReservations(String login) {
-        ReservationDao reservationDao = DaoFactory.getInstance().getDao("ReservationDao", ReservationDao.class);
+        ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
         User user = new User();
         user.setLogin(login);
         return reservationDao.get(user);
     }
 
     private boolean reservationRooms(Reservation reservation, Map<Integer, Integer> reservedRoomTypes){
-        ReservedRoomDao reservedRoomDao =
-                DaoFactory.getInstance().getDao("ReservedRoomDao", ReservedRoomDao.class);
+        ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         List<ReservedRoom> reservedRooms = new ArrayList<>();
         ReservedRoom reservedRoom;
         for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){

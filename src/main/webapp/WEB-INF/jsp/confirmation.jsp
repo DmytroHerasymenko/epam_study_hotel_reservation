@@ -1,3 +1,4 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <html>
@@ -14,6 +15,10 @@
     <tr>
         <th>reservation# </th>
         <td>${requestScope.reservation.reservationId}</td>
+    </tr>
+    <tr>
+        <th>billing date: </th>
+        <td><%=java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))%></td>
     </tr>
     <tr>
         <th>name: </th>
@@ -35,7 +40,7 @@
     </tr>
     <tr>
         <th>total price: </th>
-        <td>${requestScope.totalPrice}$</td>
+        <td>${requestScope.reservation.totalPrice}$</td>
     </tr>
 </table>
 

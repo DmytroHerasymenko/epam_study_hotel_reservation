@@ -24,10 +24,8 @@ public class MyReservationsCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        ReservationService reservationService =
-                ServiceFactory.getInstance().getService("ReservationService", ReservationService.class);
-        ReservedRoomService reservedRoomService =
-                ServiceFactory.getInstance().getService("ReservedRoomService", ReservedRoomService.class);
+        ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
+        ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
         String login = String.valueOf(session.getAttribute("login"));
         TransactionHelper.getInstance().beginTransaction();
         List<Reservation> reservations = reservationService.getReservations(login);

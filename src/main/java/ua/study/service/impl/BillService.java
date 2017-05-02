@@ -10,7 +10,7 @@ import ua.study.service.Service;
  */
 public class BillService implements Service {
     public boolean bill(Bill bill){
-        BillDao billDao = DaoFactory.getInstance().getDao("BillDao", BillDao.class);
+        BillDao billDao = DaoFactory.getInstance().getDao(BillDao.class);
         return billDao.insert(bill);
     }
 }
