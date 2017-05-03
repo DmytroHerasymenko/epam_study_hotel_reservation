@@ -1,6 +1,6 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>My Reservations</title>
@@ -12,14 +12,14 @@
 </div>
 <h1 align="center">My reservations</h1>
 
-<c:forEach var="reservation" items="${requestScope.reservs}">
+<c:forEach var="reservation" items="${requestScope.reservations}">
     <p>
-    reservation#${reservation.getReservationId()}
-    reservation date: ${reservation.getReservationDate()}.
-    Accommodation: ${reservation.getArrivingDate()}
-    - ${reservation.getDepartureDate()}. Rooms:
-    <c:forEach var="resRoom" items="${reservation.getReservedRoomList()}">
-        ${resRoom.getRoomNumber()},
+    reservation#${reservation.reservationId}
+    reservation date: ${reservation.reservationDate}.
+    Accommodation: ${reservation.arrivingDate}
+    - ${reservation.departureDate}. Rooms:
+    <c:forEach var="resRoom" items="${reservation.reservedRooms}">
+        ${resRoom.roomNumber},
     </c:forEach>
 
     <br/>

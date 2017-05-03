@@ -24,7 +24,8 @@ public class Validator {
     }
 
     public boolean isNameValid(String name){
-        return name != null && name.matches("^[A-ZА-Я]{1}[A-Za-zА-Яа-я\\s-]{3,30}$");
+        String regex="^[A-Z]{1}[A-Za-z\\s-]{2,29}|[\\u0410-\\u042f\\u0401]{1}[\\u0410-\\u044f\\u0401\\u0451\\s-]{2,29}$";
+        return name != null && name.matches(regex);
     }
 
     public boolean isLoginValid(String login){
@@ -74,9 +75,7 @@ public class Validator {
 
     private boolean isAnyRoomReserved(List<Integer> reservedRoomTypes){
         for(Integer quantity : reservedRoomTypes){
-            if(quantity > 0) {
-                return true;
-            }
+            if(quantity > 0) return true;
         }
         return false;
     }

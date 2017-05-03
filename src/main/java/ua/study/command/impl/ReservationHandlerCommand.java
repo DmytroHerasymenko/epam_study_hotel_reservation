@@ -55,12 +55,12 @@ public class ReservationHandlerCommand implements Command {
     }
 
     private String getJson(HttpServletRequest request) throws IOException {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuffer json = new StringBuffer();
         String line;
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null)
-            stringBuffer.append(line);
-        return stringBuffer.toString().replace("&confirm=confirm+reservation", "");
+            json.append(line);
+        return json.toString().replace("&confirm=confirm+reservation", "");
     }
 
     private Map<Integer, Integer> getReservedRoomTypes(String json){
