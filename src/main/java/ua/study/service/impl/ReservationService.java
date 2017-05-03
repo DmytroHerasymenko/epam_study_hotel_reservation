@@ -44,15 +44,21 @@ public class ReservationService implements Service {
     private boolean reservationRooms(Reservation reservation, Map<Integer, Integer> reservedRoomTypes){
         ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         List<ReservedRoom> reservedRooms = new ArrayList<>();
-        ReservedRoom reservedRoom;
-        for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
-            for(int i = 0; i < entry.getValue(); i++){
-                reservedRoom = new ReservedRoom();
-                reservedRoom.setRoomTypeId(entry.getKey());
-                reservedRoom.setReservationId(reservation.getReservationId());
-                reservedRooms.add(reservedRoom);
-            }
-        }
+
+        reservedRoomTypes.forEach((key, value) -> getReservedRooms(reservedRooms, key, value, reservation));
+
         return reservedRoomDao.insert(reservation, reservedRooms);
+    }
+
+    private void getReservedRooms(List<ReservedRoom> reservedRooms, int roomTypeId, int quantity,
+                                  Reservation reservation) {
+        ReservedRoom reservedRoom;
+        for(int i = 0; i < quantity; i++){
+            reservedRoom = new ReservedRoom();
+            reservedRoom.setRoomTypeId(roomTypeId);
+            reservedRoom.setReservationId(reservation.getReservationId());
+            reservedRooms.add(reservedRoom);
+        }
+
     }
 }

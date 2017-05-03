@@ -39,8 +39,9 @@ public class ReservationDao extends AbstractDao<Reservation> {
             do {
                 Reservation reservation = new Reservation();
                 reservation.setReservationId(result.getLong(1));
-                reservation.setArrivingDate(result.getDate(2).toLocalDate());
-                reservation.setDepartureDate(result.getDate(3).toLocalDate());
+                reservation.setReservationDate(result.getDate(2).toLocalDate());
+                reservation.setArrivingDate(result.getDate(3).toLocalDate());
+                reservation.setDepartureDate(result.getDate(4).toLocalDate());
                 reservations.add(reservation);
             } while (result.next());
             return reservations;

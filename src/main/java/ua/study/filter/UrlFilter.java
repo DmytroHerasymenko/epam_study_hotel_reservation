@@ -27,13 +27,13 @@ public class UrlFilter implements Filter {
         }
         localAddresses.add(properties.getProperty("url.index"));
         localAddresses.add(properties.getProperty("url.registr"));
-        localAddresses.add(properties.getProperty("url.registr_handler"));
+        //localAddresses.add(properties.getProperty("url.registr_handler"));
         localAddresses.add(properties.getProperty("url.sign_in"));
-        localAddresses.add(properties.getProperty("url.sign_in_handler"));
+        //localAddresses.add(properties.getProperty("url.sign_in_handler"));
         localAddresses.add(properties.getProperty("url.dates"));
-        localAddresses.add(properties.getProperty("url.dates_handler"));
+        //localAddresses.add(properties.getProperty("url.dates_handler"));
         localAddresses.add(properties.getProperty("url.reserv"));
-        localAddresses.add(properties.getProperty("url.reserv_handler"));
+        //localAddresses.add(properties.getProperty("url.reserv_handler"));
         localAddresses.add(properties.getProperty("url.bill"));
         localAddresses.add(properties.getProperty("url.bill_handler"));
         localAddresses.add(properties.getProperty("url.my_reservations"));

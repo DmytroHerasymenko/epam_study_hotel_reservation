@@ -10,6 +10,7 @@ import java.util.List;
 public class Reservation {
     private long reservationId;
     private String clientLogin;
+    private LocalDate reservationDate;
     private LocalDate arrivingDate;
     private LocalDate departureDate;
     private List<ReservedRoom> reservedRooms;
@@ -29,6 +30,14 @@ public class Reservation {
 
     public void setClientLogin(String clientLogin) {
         this.clientLogin = clientLogin;
+    }
+
+    public LocalDate getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(LocalDate reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
     public LocalDate getArrivingDate() {

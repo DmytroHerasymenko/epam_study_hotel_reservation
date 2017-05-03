@@ -1,8 +1,9 @@
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
-<%request.setCharacterEncoding("UTF-8");%>--%>
-<html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%request.setCharacterEncoding("UTF-8");%>
+<!DOCTYPE html>
+<html lang="${language}">
 <head>
-    <%--<meta http-equiv="Content-Type" content="text/html;charset=utf-8">--%>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>Registration Form</title>
 </head>
 <body>
@@ -20,7 +21,8 @@
     <label for="name">
         <p align="center">Name and Surname
 
-        <input type="text" name="name" id="name" pattern="^[A-Z]{1}[A-Za-z\s-]+|[А-ЯЁ]{1}[А-Яа-яЁё\s-]+$" minlength="3" maxlength="30" required>
+        <input type="text" name="name" id="name"
+               pattern="^[A-Z]{1}[A-Za-z\s-]{2,29}|[\u0410-\u042f\u0401]{1}[\u0410-\u044f\u0401\u0451\s-]{2,29}$" required>
         </p>
 
         <div style="text-align: center">
