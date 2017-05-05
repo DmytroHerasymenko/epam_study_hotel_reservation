@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by dima on 03.04.17.
@@ -53,29 +53,35 @@ public class Validator {
     }
 
     public boolean isReservedRoomsQuantityValid(String json){
-        List<Integer> reservedRoomsQuantity = new ArrayList<>();
+        Map<Integer, Integer> reservedRoomTypes = new HashMap<>();
         String[] entry;
         int key;
         int value;
         try {
-        String[] jsonArray = json.split("&");
+            String[] jsonArray = json.split("&");
             for(String s : jsonArray) {
                 entry = s.split("=");
                 key = Integer.valueOf(entry[0]);
                 value = Integer.valueOf(entry[1]);
-                reservedRoomsQuantity.add(value);
-                if(key < 0 || value < 0) return false;
+                reservedRoomTypes.put(key, value);
             }
         } catch (NumberFormatException e){
             LOGGER.error(e.getMessage());
             return false;
         }
-        return isAnyRoomReserved(reservedRoomsQuantity);
+        return isQuantityValid(reservedRoomTypes) && isAnyRoomReserved(reservedRoomTypes);
     }
 
-    private boolean isAnyRoomReserved(List<Integer> reservedRoomTypes){
-        for(Integer quantity : reservedRoomTypes){
-            if(quantity > 0) return true;
+    private boolean isQuantityValid(Map<Integer, Integer> reservedRoomTypes) {
+        for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
+            if(entry.getKey() < 0 || entry.getValue() < 0) return false;
+        }
+        return true;
+    }
+
+    private boolean isAnyRoomReserved(Map<Integer, Integer> reservedRoomTypes){
+        for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
+            if(entry.getValue() > 0) return true;
         }
         return false;
     }

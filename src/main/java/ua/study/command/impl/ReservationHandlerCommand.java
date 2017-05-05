@@ -4,8 +4,7 @@ import ua.study.command.Command;
 import ua.study.command.validation.Validator;
 import ua.study.domain.*;
 import ua.study.service.ServiceFactory;
-import ua.study.service.impl.ReservationService;
-import ua.study.service.impl.ReservedRoomService;
+import ua.study.service.impl.RoomTypeService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,30 +27,15 @@ public class ReservationHandlerCommand implements Command {
         String json = getJson(request);
 
         if(!Validator.getInstance().isReservedRoomsQuantityValid(json)){
-            session.setAttribute("error", "all fields should be filled correct");
-            response.sendRedirect("/reservation");
-        }
-        User client = (User) session.getAttribute("client");
-        Reservation reservation = (Reservation) session.getAttribute("reservation");
-        reservation.setClientLogin(client.getLogin());
-
-        Map<Integer, Integer> reservedRoomTypes = getReservedRoomTypes(json);
-        ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
-        reservation = reservationService.reservation(reservation, reservedRoomTypes);
-        if(reservation == null) {
-            session.setAttribute("error", "sorry, we do not have enough rooms on the selected dates.");
+            session.setAttribute("error", "choose a room for reservation, please");
             response.sendRedirect("/reservation");
             return;
         }
-        setReservedRooms(reservation);
-        session.setAttribute("reservation", reservation);
-        response.sendRedirect("/bill");
-    }
 
-    private void setReservedRooms(Reservation reservation){
-        ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
-        List<ReservedRoom> reservedRooms = reservedRoomService.getReservedRooms(reservation.getReservationId());
-        reservation.setReservedRooms(reservedRooms);
+        Map<RoomType, Integer> reservedRoomTypes = getReservedRoomTypes(json);
+        session.setAttribute("reservedRoomTypes", reservedRoomTypes);
+
+        response.sendRedirect("/bill");
     }
 
     private String getJson(HttpServletRequest request) throws IOException {
@@ -60,17 +44,25 @@ public class ReservationHandlerCommand implements Command {
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null)
             json.append(line);
-        return json.toString().replace("&confirm=confirm+reservation", "");
+        return json.toString().replace("&confirm=continue", "");
     }
 
-    private Map<Integer, Integer> getReservedRoomTypes(String json){
+    private Map<RoomType, Integer> getReservedRoomTypes(String json){
         String[] jsonArray = json.split("&");
-        Map<Integer, Integer> reservedRoomTypes = new HashMap<>();
-        String[] entry;
+        Map<RoomType, Integer> reservedRoomTypes = new HashMap<>();
         for(String s : jsonArray) {
-            entry = s.split("=");
-            reservedRoomTypes.put(Integer.valueOf(entry[0]), Integer.valueOf(entry[1]));
+            getRoomTypeById(reservedRoomTypes, s);
         }
         return reservedRoomTypes;
+    }
+
+    private void getRoomTypeById(Map<RoomType, Integer> reservedRoomTypes, String jsonMapEntry){
+        String[] entry = jsonMapEntry.split("=");
+        RoomTypeService roomTypeService = ServiceFactory.getInstance().getService(RoomTypeService.class);
+        List<RoomType> roomTypes = roomTypeService.getRoomTypes();
+        roomTypes.forEach(roomType -> {
+            if(Integer.parseInt(entry[0]) == roomType.getRoomTypeId())
+                reservedRoomTypes.put(roomType, Integer.valueOf(entry[1]));
+        });
     }
 }

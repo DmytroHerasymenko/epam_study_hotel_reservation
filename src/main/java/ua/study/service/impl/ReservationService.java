@@ -1,12 +1,11 @@
 package ua.study.service.impl;
 
 import ua.study.dao.DaoFactory;
+import ua.study.dao.impl.BillDao;
 import ua.study.dao.impl.ReservationDao;
 import ua.study.dao.impl.ReservedRoomDao;
 import ua.study.dao.impl.executor.TransactionHelper;
-import ua.study.domain.Reservation;
-import ua.study.domain.ReservedRoom;
-import ua.study.domain.User;
+import ua.study.domain.*;
 import ua.study.service.Service;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Map;
  */
 public class ReservationService implements Service {
 
-    public Reservation reservation(Reservation reservation, Map<Integer, Integer> reservedRoomTypes){
+    public Reservation reservation(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
 
         ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
 
@@ -30,7 +29,9 @@ public class ReservationService implements Service {
             TransactionHelper.getInstance().rollbackTransaction();
             return null;
         }
+        saveBill(reservation);
         TransactionHelper.getInstance().commitTransaction();
+
         return reservation;
     }
 
@@ -41,11 +42,11 @@ public class ReservationService implements Service {
         return reservationDao.get(user);
     }
 
-    private boolean reservationRooms(Reservation reservation, Map<Integer, Integer> reservedRoomTypes){
+    private boolean reservationRooms(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
         ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         List<ReservedRoom> reservedRooms = new ArrayList<>();
 
-        reservedRoomTypes.forEach((key, value) -> getReservedRooms(reservedRooms, key, value, reservation));
+        reservedRoomTypes.forEach((key, value) -> getReservedRooms(reservedRooms, key.getRoomTypeId(), value, reservation));
 
         return reservedRoomDao.insert(reservation, reservedRooms);
     }
@@ -59,6 +60,13 @@ public class ReservationService implements Service {
             reservedRoom.setReservationId(reservation.getReservationId());
             reservedRooms.add(reservedRoom);
         }
+    }
 
+    private void saveBill(Reservation reservation) {
+        BillDao billDao = DaoFactory.getInstance().getDao(BillDao.class);
+        Bill bill = new Bill();
+        bill.setReservationId(reservation.getReservationId());
+        bill.setTotalPrice(reservation.getTotalPrice());
+        billDao.insert(bill);
     }
 }

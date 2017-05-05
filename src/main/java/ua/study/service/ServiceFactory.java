@@ -29,7 +29,6 @@ public class ServiceFactory {
     }
 
     private void init(){
-        services.put(BillService.class, new BillService());
         services.put(ReservationService.class, new ReservationService());
         services.put(ReservedRoomService.class, new ReservedRoomService());
         services.put(RoomTypeService.class, new RoomTypeService());
