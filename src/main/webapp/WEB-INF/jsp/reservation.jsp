@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
-<html>
+<html lang="${language}">
 <head>
     <title>Reservation</title>
     <script>
@@ -39,8 +39,9 @@
                 <br/>
     </c:forEach>
     </p>
+
     <div div style="text-align: center">
-        <input type="submit" value="confirm reservation" name="confirm" id="confirm">
+        <input type="submit" value="continue" name="confirm" id="confirm">
     </div>
     <div div style="text-align: center">
         <a href="./dates">choose another dates</a>

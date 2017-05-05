@@ -31,6 +31,7 @@ public class ReservationCommand implements Command {
         Reservation reservation = (Reservation) session.getAttribute("reservation");
         LocalDate arrive = reservation.getArrivingDate();
         LocalDate departure = reservation.getDepartureDate();
+
         RoomTypeService roomTypeService = ServiceFactory.getInstance().getService(RoomTypeService.class);
         Map<RoomType, Integer> freeRoomTypes = roomTypeService.getFreeRoomTypes(arrive, departure);
         request.setAttribute("freeRoomTypes", freeRoomTypes);

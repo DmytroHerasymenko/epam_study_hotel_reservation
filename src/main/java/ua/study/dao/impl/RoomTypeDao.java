@@ -31,6 +31,19 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
         getExecutor().executorUpdate(properties.getProperty("create.room_type"));
     }
 
+    public List<RoomType> get(){
+        List<RoomType> roomTypes = new ArrayList<>();
+        getExecutor().executorQuery(properties.getProperty("get.room_type"), result -> {
+            if(!(result.next())) return null;
+            do {
+                RoomType roomType = getRoomType(result);
+                roomTypes.add(roomType);
+            } while (result.next());
+            return roomTypes;
+        });
+        return roomTypes;
+    }
+
     public Map<RoomType, Integer> getFreeRoomTypes(Reservation domain){
         String query = properties.getProperty("get.free_room_type");
         Map<RoomType, Integer> freeRoomTypes = new LinkedHashMap<>();

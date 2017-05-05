@@ -53,12 +53,3 @@ public class MyReservationsCommand implements Command {
         return localReservedRooms;
     }
 }
-
-/*List<ReservedRoom> localReservedRooms = new ArrayList<>();
-        int size = reservedRooms.size();
-        for(int i = 0; i < size; i++){
-            if(reservation.getReservationId() == reservedRooms.get(i).getReservationId()){
-                localReservedRooms.add(reservedRooms.remove(i));
-                i--;
-            }
-        }*/
