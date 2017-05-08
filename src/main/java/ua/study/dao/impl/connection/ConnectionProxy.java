@@ -3,10 +3,7 @@ package ua.study.dao.impl.connection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Created by dima on 04.04.17.
@@ -49,6 +46,10 @@ public class ConnectionProxy {
         } catch (SQLException e) {
             LOGGER.error("some problem with database connection ", e);
         }
+    }
+
+    public Array createArrayOf(String type, Object[] array) throws SQLException {
+        return connection.createArrayOf(type, array);
     }
 
     public void close(){

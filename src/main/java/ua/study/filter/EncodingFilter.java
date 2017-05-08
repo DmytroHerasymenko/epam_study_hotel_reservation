@@ -11,6 +11,7 @@ public class EncodingFilter implements Filter {
     private static final String FILTERABLE_CONTENT_TYPE="application/x-www-form-urlencoded";
     private static final String ENCODING_DEFAULT = "UTF-8";
     private static final String ENCODING_INIT_PARAM_NAME = "encoding";
+    private static final String CONTENT_TYPE = "text/html;charset=utf-8";
 
     private String encoding;
 
@@ -22,6 +23,7 @@ public class EncodingFilter implements Filter {
         String contentType = req.getContentType();
         if (contentType != null && contentType.startsWith(FILTERABLE_CONTENT_TYPE))
             req.setCharacterEncoding(encoding);
+        resp.setContentType(CONTENT_TYPE);
         chain.doFilter(req, resp);
     }
 

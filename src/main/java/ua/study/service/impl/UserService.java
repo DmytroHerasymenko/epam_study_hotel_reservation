@@ -12,19 +12,21 @@ public class UserService implements Service {
 
     public boolean registration(String name, String login, String password) {
         UserDao userDao = DaoFactory.getInstance().getDao(UserDao.class);
-        User user = new User();
+        User user = setLoginAndPassword(login, password);
         user.setName(name);
-        user.setLogin(login);
-        user.setPassword(password);
         return userDao.insert(user);
     }
 
     public User loginAndPasswordVerify(String login, String password){
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao userDao = factory.getDao(UserDao.class);
+        UserDao userDao = DaoFactory.getInstance().getDao(UserDao.class);
+        User user = setLoginAndPassword(login, password);
+        return userDao.verifyUserByLoginAndPassword(user);
+    }
+
+    private User setLoginAndPassword(String login, String password){
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
-        return userDao.verifyUserByLoginAndPassword(user);
+        return user;
     }
 }

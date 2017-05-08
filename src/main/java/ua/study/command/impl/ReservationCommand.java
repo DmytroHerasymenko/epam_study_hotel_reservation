@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Map;
 
 /**
@@ -23,17 +22,16 @@ public class ReservationCommand implements Command {
         HttpSession session = request.getSession(false);
 
         if (session.getAttribute("reservation") == null) {
-            session.setAttribute("error", "all dates fields should be filled correct");
+            session.setAttribute("error", "error.dates_correct");
             response.sendRedirect("/dates");
             return;
         }
 
         Reservation reservation = (Reservation) session.getAttribute("reservation");
-        LocalDate arrive = reservation.getArrivingDate();
-        LocalDate departure = reservation.getDepartureDate();
 
         RoomTypeService roomTypeService = ServiceFactory.getInstance().getService(RoomTypeService.class);
-        Map<RoomType, Integer> freeRoomTypes = roomTypeService.getFreeRoomTypes(arrive, departure);
+        Map<RoomType, Integer> freeRoomTypes = roomTypeService.getFreeRoomTypes(reservation);
+
         request.setAttribute("freeRoomTypes", freeRoomTypes);
         request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp").include(request, response);
     }

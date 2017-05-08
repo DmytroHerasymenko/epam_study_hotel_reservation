@@ -6,7 +6,6 @@ import ua.study.domain.Reservation;
 import ua.study.domain.RoomType;
 import ua.study.service.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +14,8 @@ import java.util.Map;
  */
 public class RoomTypeService implements Service{
 
-    public Map<RoomType, Integer> getFreeRoomTypes(LocalDate arrive, LocalDate departure){
+    public Map<RoomType, Integer> getFreeRoomTypes(Reservation reservation){
         RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao(RoomTypeDao.class);
-        Reservation reservation = new Reservation();
-        reservation.setArrivingDate(arrive);
-        reservation.setDepartureDate(departure);
         return roomTypeDao.getFreeRoomTypes(reservation);
     }
 

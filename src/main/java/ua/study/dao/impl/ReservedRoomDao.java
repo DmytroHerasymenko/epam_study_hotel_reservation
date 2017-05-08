@@ -6,7 +6,6 @@ import ua.study.dao.AbstractDao;
 import ua.study.dao.impl.executor.ResultHandler;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
-import ua.study.domain.User;
 import ua.study.domain.enums.Bedspace;
 import ua.study.domain.enums.RoomCategory;
 
@@ -42,9 +41,9 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
         return (List) getExecutor().getReservedRoom(query, domain, new ResultHandlerReservedRoom());
     }
 
-    public List<ReservedRoom> getUserReservedRooms(User domain){
+    public List<ReservedRoom> getUserReservedRooms(Long[] reservationsId){
         String query = properties.getProperty("get.user_res_room");
-        return (List) getExecutor().getByLogin(query, domain, new ResultHandlerReservedRoom());
+        return (List) getExecutor().getUserReservedRoom(query, reservationsId, new ResultHandlerReservedRoom());
     }
 
     private void init(){
@@ -56,19 +55,25 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
     }
 
     private class ResultHandlerReservedRoom implements ResultHandler {
+
         public List<ReservedRoom> handle(ResultSet result) throws SQLException {
             List<ReservedRoom> reservedRooms = new ArrayList<>();
             if(!(result.next())) return null;
             do {
-                ReservedRoom reservedRoom = new ReservedRoom();
-                reservedRoom.setReservationId(result.getLong(1));
-                reservedRoom.setRoomCategory(RoomCategory.valueOf(result.getString(2)));
-                reservedRoom.setBedspace(Bedspace.valueOf(result.getString(3)));
-                reservedRoom.setRoomNumber(result.getInt(4));
-                reservedRoom.setPrice(result.getDouble(5));
+                ReservedRoom reservedRoom = getReservedRoom(result);
                 reservedRooms.add(reservedRoom);
             } while (result.next());
             return reservedRooms;
+        }
+
+        private ReservedRoom getReservedRoom(ResultSet result) throws SQLException {
+            ReservedRoom reservedRoom = new ReservedRoom();
+            reservedRoom.setReservationId(result.getLong(1));
+            reservedRoom.setRoomCategory(RoomCategory.valueOf(result.getString(2)));
+            reservedRoom.setBedspace(Bedspace.valueOf(result.getString(3)));
+            reservedRoom.setRoomNumber(result.getInt(4));
+            reservedRoom.setPrice(result.getDouble(5));
+            return reservedRoom;
         }
     }
 }

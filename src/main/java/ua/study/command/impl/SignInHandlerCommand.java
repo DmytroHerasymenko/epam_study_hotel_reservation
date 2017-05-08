@@ -1,7 +1,8 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.command.validation.Validator;
+import ua.study.command.util.UtilFactory;
+import ua.study.command.util.validation.Validator;
 import ua.study.domain.User;
 import ua.study.service.ServiceFactory;
 import ua.study.service.impl.UserService;
@@ -22,8 +23,9 @@ public class SignInHandlerCommand implements Command {
         String password = request.getParameter("password");
         HttpSession session = request.getSession();
 
-        if(!Validator.getInstance().isLoginValid(login) || !Validator.getInstance().isPasswordValid(password)) {
-            session.setAttribute("error", "login or password incorrect");
+        Validator validator = UtilFactory.getInstance().getValidator();
+        if(!validator.isLoginValid(login) || !validator.isPasswordValid(password)) {
+            session.setAttribute("error", "error.sign_in_front");
             response.sendRedirect("/sign_in");
             return;
         }
@@ -31,7 +33,7 @@ public class SignInHandlerCommand implements Command {
         UserService userService = ServiceFactory.getInstance().getService(UserService.class);
         User client = userService.loginAndPasswordVerify(login, password);
         if(client == null){
-            session.setAttribute("error", "wrong login or password");
+            session.setAttribute("error", "error.sign_in_back");
             response.sendRedirect("/sign_in");
             return;
         }

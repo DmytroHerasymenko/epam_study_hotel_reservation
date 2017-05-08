@@ -1,7 +1,7 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.command.validation.Validator;
+import ua.study.command.util.UtilFactory;
 import ua.study.domain.*;
 import ua.study.service.ServiceFactory;
 import ua.study.service.impl.RoomTypeService;
@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by dima on 20.04.17.
@@ -26,8 +24,8 @@ public class ReservationHandlerCommand implements Command {
         HttpSession session = request.getSession(false);
         String json = getJson(request);
 
-        if(!Validator.getInstance().isReservedRoomsQuantityValid(json)){
-            session.setAttribute("error", "choose a room for reservation, please");
+        if(!UtilFactory.getInstance().getValidator().isReservedRoomsQuantityValid(json)){
+            session.setAttribute("error", "error.choose_room");
             response.sendRedirect("/reservation");
             return;
         }
@@ -50,19 +48,22 @@ public class ReservationHandlerCommand implements Command {
     private Map<RoomType, Integer> getReservedRoomTypes(String json){
         String[] jsonArray = json.split("&");
         Map<RoomType, Integer> reservedRoomTypes = new HashMap<>();
-        for(String s : jsonArray) {
-            getRoomTypeById(reservedRoomTypes, s);
-        }
+
+        Arrays.stream(jsonArray).forEach(entry -> setRoomTypeById(reservedRoomTypes, entry));
+
         return reservedRoomTypes;
     }
 
-    private void getRoomTypeById(Map<RoomType, Integer> reservedRoomTypes, String jsonMapEntry){
-        String[] entry = jsonMapEntry.split("=");
+    private void setRoomTypeById(Map<RoomType, Integer> reservedRoomTypes, String jsonMapEntry){
         RoomTypeService roomTypeService = ServiceFactory.getInstance().getService(RoomTypeService.class);
         List<RoomType> roomTypes = roomTypeService.getRoomTypes();
-        roomTypes.forEach(roomType -> {
-            if(Integer.parseInt(entry[0]) == roomType.getRoomTypeId())
-                reservedRoomTypes.put(roomType, Integer.valueOf(entry[1]));
-        });
+
+        String[] entry = jsonMapEntry.split("=");
+
+        RoomType roomTypeById = roomTypes.stream()
+                .filter(roomType -> roomType.getRoomTypeId() == Integer.parseInt(entry[0]))
+                .findFirst().get();
+
+        reservedRoomTypes.put(roomTypeById, Integer.valueOf(entry[1]));
     }
 }

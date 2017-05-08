@@ -1,7 +1,8 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.command.validation.Validator;
+import ua.study.command.util.UtilFactory;
+import ua.study.command.util.validation.Validator;
 import ua.study.service.ServiceFactory;
 import ua.study.service.impl.UserService;
 
@@ -20,9 +21,9 @@ public class RegistrationHandlerCommand implements Command {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
-        if(!Validator.getInstance().isNameValid(name) || !Validator.getInstance().isLoginValid(login)
-                || !Validator.getInstance().isPasswordValid(password)){
-            request.getSession().setAttribute("error", "all fields should be filled correct");
+        Validator validator = UtilFactory.getInstance().getValidator();
+        if(!validator.isNameValid(name) || !validator.isLoginValid(login) || !validator.isPasswordValid(password)){
+            request.getSession().setAttribute("error", "error.filled_correct");
             response.sendRedirect("/registration");
             return;
         }
@@ -30,7 +31,7 @@ public class RegistrationHandlerCommand implements Command {
         UserService userService = ServiceFactory.getInstance().getService(UserService.class);
         boolean isSuccess = userService.registration(name, login, password);
         if(!isSuccess){
-            request.getSession().setAttribute("error", "login is not unique");
+            request.getSession().setAttribute("error", "error.login_not_unique");
             response.sendRedirect("/registration");
             return;
         }

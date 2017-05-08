@@ -18,7 +18,6 @@ import java.util.Map;
 public class ReservationService implements Service {
 
     public Reservation reservation(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
-
         ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
 
         TransactionHelper.getInstance().beginTransaction();
@@ -35,10 +34,8 @@ public class ReservationService implements Service {
         return reservation;
     }
 
-    public List<Reservation> getReservations(String login) {
+    public List<Reservation> getReservations(User user) {
         ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
-        User user = new User();
-        user.setLogin(login);
         return reservationDao.get(user);
     }
 
@@ -46,12 +43,18 @@ public class ReservationService implements Service {
         ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         List<ReservedRoom> reservedRooms = new ArrayList<>();
 
-        reservedRoomTypes.forEach((key, value) -> getReservedRooms(reservedRooms, key.getRoomTypeId(), value, reservation));
+        reservedRoomTypes.forEach((key, value) ->
+                setReservedRooms(reservedRooms, key.getRoomTypeId(), value, reservation));
 
-        return reservedRoomDao.insert(reservation, reservedRooms);
+        boolean isSuccess = reservedRoomDao.insert(reservation, reservedRooms);
+        if(isSuccess) {
+            reservation.setReservedRooms(reservedRoomDao.get(reservation));
+        }
+
+        return isSuccess;
     }
 
-    private void getReservedRooms(List<ReservedRoom> reservedRooms, int roomTypeId, int quantity,
+    private void setReservedRooms(List<ReservedRoom> reservedRooms, int roomTypeId, int quantity,
                                   Reservation reservation) {
         ReservedRoom reservedRoom;
         for(int i = 0; i < quantity; i++){

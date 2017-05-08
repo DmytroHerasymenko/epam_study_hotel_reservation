@@ -30,8 +30,8 @@ public class MyReservationsCommand implements Command {
         User client = (User) session.getAttribute("client");
 
         TransactionHelper.getInstance().beginTransaction();
-        List<Reservation> reservations = reservationService.getReservations(client.getLogin());
-        List<ReservedRoom> reservedRooms = reservedRoomService.getUserReservedRooms(client.getLogin());
+        List<Reservation> reservations = reservationService.getReservations(client);
+        List<ReservedRoom> reservedRooms = reservedRoomService.getUserReservedRooms(reservations);
         TransactionHelper.getInstance().commitTransaction();
 
         setReservedRooms(reservations, reservedRooms);
