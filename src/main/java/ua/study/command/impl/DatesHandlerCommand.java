@@ -1,7 +1,7 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.command.validation.Validator;
+import ua.study.command.util.UtilFactory;
 import ua.study.domain.*;
 
 import javax.servlet.ServletException;
@@ -19,12 +19,12 @@ public class DatesHandlerCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
         String arriveDate = request.getParameter("arriveDatepicker");
         String departureDate = request.getParameter("departureDatepicker");
-        HttpSession session = request.getSession(false);
 
-        if (!Validator.getInstance().isReservationDatesValid(arriveDate, departureDate)) {
-            session.setAttribute("error", "all dates fields should be filled correct");
+        if (!UtilFactory.getInstance().getValidator().isReservationDatesValid(arriveDate, departureDate)) {
+            session.setAttribute("error", "error.dates_correct");
             response.sendRedirect("/dates");
             return;
         }

@@ -1,4 +1,4 @@
-package ua.study.command.validation;
+package ua.study.command.util.validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,14 +15,7 @@ import java.util.Map;
  */
 public class Validator {
 
-    private static final Validator instance = new Validator();
-    private final Logger LOGGER = LogManager.getLogger(Validator.class.getName());
-
-    private Validator(){}
-
-    public static Validator getInstance(){
-        return instance;
-    }
+    private final Logger LOGGER = LogManager.getLogger(Validator.class);
 
     public boolean isNameValid(String name){
         String regex="^[A-Z]{1}[A-Za-z\\s-]{2,29}|[\\u0410-\\u042f\\u0401]{1}[\\u0410-\\u044f\\u0401\\u0451\\s-]{2,29}$";
@@ -38,51 +32,55 @@ public class Validator {
 
     public boolean isReservationDatesValid(String arriveDate, String departureDate){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate arrive;
-        LocalDate departure;
         try {
-            arrive = LocalDate.parse(arriveDate, formatter);
-            departure = LocalDate.parse(departureDate, formatter);
+            LocalDate arrive = LocalDate.parse(arriveDate, formatter);
+            LocalDate departure = LocalDate.parse(departureDate, formatter);
+            return isArriveDataValid(arrive) && isDepartureDataValid(arrive, departure);
         } catch (DateTimeParseException e) {
             LOGGER.error(e.getMessage());
             return false;
         }
-        boolean isArriveValid = !arrive.isBefore(LocalDate.now()) && !arrive.isAfter(LocalDate.now().plusYears(1));
-        boolean isDepartureValid = !departure.isBefore(arrive.plusDays(1)) && !departure.isAfter(arrive.plusDays(30));
-        return isArriveValid && isDepartureValid;
     }
 
     public boolean isReservedRoomsQuantityValid(String json){
         Map<Integer, Integer> reservedRoomTypes = new HashMap<>();
-        String[] entry;
-        int key;
-        int value;
         try {
             String[] jsonArray = json.split("&");
-            for(String s : jsonArray) {
-                entry = s.split("=");
-                key = Integer.valueOf(entry[0]);
-                value = Integer.valueOf(entry[1]);
-                reservedRoomTypes.put(key, value);
-            }
+            Arrays.stream(jsonArray)
+                    .forEach(entry -> {
+                        String[] elements = entry.split("=");
+                        reservedRoomTypes.put(Integer.valueOf(elements[0]), Integer.valueOf(elements[1]));
+                    });
+            return isQuantityValid(reservedRoomTypes) && isAnyRoomReserved(reservedRoomTypes);
         } catch (NumberFormatException e){
             LOGGER.error(e.getMessage());
             return false;
         }
-        return isQuantityValid(reservedRoomTypes) && isAnyRoomReserved(reservedRoomTypes);
     }
 
     private boolean isQuantityValid(Map<Integer, Integer> reservedRoomTypes) {
         for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
-            if(entry.getKey() < 0 || entry.getValue() < 0) return false;
+            if(entry.getKey() < 0 || entry.getValue() < 0) {
+                return false;
+            }
         }
         return true;
     }
 
     private boolean isAnyRoomReserved(Map<Integer, Integer> reservedRoomTypes){
         for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
-            if(entry.getValue() > 0) return true;
+            if(entry.getValue() > 0) {
+                return true;
+            }
         }
         return false;
+    }
+
+    private boolean isArriveDataValid(LocalDate arrive){
+        return !arrive.isBefore(LocalDate.now()) && !arrive.isAfter(LocalDate.now().plusYears(1));
+    }
+
+    private boolean isDepartureDataValid(LocalDate arrive, LocalDate departure){
+        return !departure.isBefore(arrive.plusDays(1)) && !departure.isAfter(arrive.plusDays(30));
     }
 }

@@ -21,8 +21,8 @@ public class BillCommand implements Command {
         HttpSession session = request.getSession(false);
 
         if(session.getAttribute("reservedRoomTypes") == null){
-            session.setAttribute("error", "all fields should be filled correct");
-            response.sendRedirect("/dates");
+            session.setAttribute("error", "error.filled_correct");
+            response.sendRedirect("/reservation");
             return;
         }
 
@@ -34,10 +34,10 @@ public class BillCommand implements Command {
         Map<RoomType, Integer> reservedRoomTypes = (Map<RoomType, Integer>) session.getAttribute("reservedRoomTypes");
         Reservation reservation = (Reservation) session.getAttribute("reservation");
         double stayingPeriod = ChronoUnit.DAYS.between(reservation.getArrivingDate(), reservation.getDepartureDate());
-        double totalPrice = 0;
-        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
-            totalPrice += entry.getKey().getPrice() * (double) entry.getValue();
-        }
-        return totalPrice * stayingPeriod;
+
+        final double[] totalPrice = {0};
+        reservedRoomTypes.forEach((key,value) -> totalPrice[0] += key.getPrice() * value);
+
+        return totalPrice[0] * stayingPeriod;
     }
 }

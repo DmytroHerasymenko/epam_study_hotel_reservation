@@ -130,6 +130,22 @@ public class Executor {
         }
     }
 
+    public <T> T getUserReservedRoom(String query, Long[] reservationsId, ResultHandler<T> handler){
+        ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
+        try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {
+            statement.setArray(1, connectionProxy.createArrayOf("BIGINT", reservationsId));
+            ResultSet result = statement.executeQuery();
+            T value = handler.handle(result);
+            result.close();
+            return value;
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw new IllegalStateException("some problem with execute query", e);
+        } finally {
+            close(connectionProxy);
+        }
+    }
+
     public <T> T getReservedRoom(String query, Reservation domain, ResultHandler<T> handler) {
         ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         try (PreparedStatement statement = connectionProxy.prepareStatement(query)) {

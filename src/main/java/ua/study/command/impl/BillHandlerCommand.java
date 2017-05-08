@@ -4,14 +4,12 @@ import ua.study.command.Command;
 import ua.study.domain.*;
 import ua.study.service.ServiceFactory;
 import ua.study.service.impl.ReservationService;
-import ua.study.service.impl.ReservedRoomService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,21 +28,14 @@ public class BillHandlerCommand implements Command {
         ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
         reservation = reservationService.reservation(reservation, reservedRoomTypes);
         if(reservation == null) {
-            session.setAttribute("error", "sorry, we do not have enough rooms on the selected dates.");
+            session.setAttribute("error", "error.no_rooms");
             response.sendRedirect("/reservation");
             return;
         }
-        setReservedRooms(reservation);
 
         request.setAttribute("reservation", reservation);
         session.removeAttribute("reservation");
         session.removeAttribute("reservedRoomTypes");
         request.getRequestDispatcher("/WEB-INF/jsp/confirmation.jsp").include(request, response);
-    }
-
-    private void setReservedRooms(Reservation reservation){
-        ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
-        List<ReservedRoom> reservedRooms = reservedRoomService.getReservedRooms(reservation.getReservationId());
-        reservation.setReservedRooms(reservedRooms);
     }
 }

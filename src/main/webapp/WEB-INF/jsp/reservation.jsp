@@ -1,8 +1,19 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="messages"/>
 <html lang="${language}">
 <head>
-    <title>Reservation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/resource/js/main.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="/resource/css/main.css" rel="stylesheet" type="text/css">
+    <title><fmt:message key="java.hotel"/></title>
     <script>
         confirm.onclick = function () {
             var request = new XMLHttpRequest();
@@ -23,6 +34,12 @@
     </script>
 </head>
 <body>
+<form>
+    <select id="language" name="language" onchange="submit()">
+        <option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
+        <option value="ru" ${language == 'ru' ? 'selected' : ''}>Русский</option>
+    </select>
+</form>
 <form action="./reservation_handler" method="post">
     <h1 align="center">Java-hotel &#9733;&#9733;&#9733;&#9733;&#9733;</h1>
 <p align="center">

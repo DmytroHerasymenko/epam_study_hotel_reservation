@@ -7,6 +7,8 @@ import ua.study.domain.Reservation;
 import ua.study.domain.User;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -37,16 +39,21 @@ public class ReservationDao extends AbstractDao<Reservation> {
         getExecutor().getByLogin(query, domain, result -> {
             if(!(result.next())) return null;
             do {
-                Reservation reservation = new Reservation();
-                reservation.setReservationId(result.getLong(1));
-                reservation.setReservationDate(result.getDate(2).toLocalDate());
-                reservation.setArrivingDate(result.getDate(3).toLocalDate());
-                reservation.setDepartureDate(result.getDate(4).toLocalDate());
+                Reservation reservation = getReservation(result);
                 reservations.add(reservation);
             } while (result.next());
             return reservations;
         } );
         return reservations;
+    }
+
+    private Reservation getReservation(ResultSet result) throws SQLException {
+        Reservation reservation = new Reservation();
+        reservation.setReservationId(result.getLong(1));
+        reservation.setReservationDate(result.getDate(2).toLocalDate());
+        reservation.setArrivingDate(result.getDate(3).toLocalDate());
+        reservation.setDepartureDate(result.getDate(4).toLocalDate());
+        return reservation;
     }
 
     private void init(){
