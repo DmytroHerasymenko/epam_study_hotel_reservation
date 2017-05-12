@@ -3,7 +3,7 @@ package ua.study.dao.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.study.dao.AbstractDao;
-import ua.study.dao.impl.executor.ResultHandler;
+import ua.study.dao.impl.connection.ResultHandler;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
 import ua.study.domain.enums.Bedspace;

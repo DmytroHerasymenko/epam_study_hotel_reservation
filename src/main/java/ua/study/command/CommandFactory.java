@@ -39,5 +39,6 @@ public class CommandFactory {
         commands.put("/bill", new BillCommand());
         commands.put("/bill_handler", new BillHandlerCommand());
         commands.put("/my_reservations", new MyReservationsCommand());
+        commands.put("/confirmation", new ConfirmationCommand());
     }
 }

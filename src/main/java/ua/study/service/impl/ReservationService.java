@@ -4,7 +4,7 @@ import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.BillDao;
 import ua.study.dao.impl.ReservationDao;
 import ua.study.dao.impl.ReservedRoomDao;
-import ua.study.dao.impl.executor.TransactionHelper;
+import ua.study.dao.impl.connection.TransactionHelper;
 import ua.study.domain.*;
 import ua.study.service.Service;
 

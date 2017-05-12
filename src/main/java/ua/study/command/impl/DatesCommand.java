@@ -13,6 +13,6 @@ import java.io.IOException;
 public class DatesCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/check_dates.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/dates.jsp").include(request, response);
     }
 }

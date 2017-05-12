@@ -2,6 +2,7 @@ package ua.study.command.util.validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.study.domain.RoomType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by dima on 03.04.17.
@@ -42,15 +44,13 @@ public class Validator {
         }
     }
 
-    public boolean isReservedRoomsQuantityValid(String json){
-        Map<Integer, Integer> reservedRoomTypes = new HashMap<>();
+    public boolean isReservedRoomsQuantityValid(Map<RoomType, String> reservedRoomQuantity){
         try {
-            String[] jsonArray = json.split("&");
-            Arrays.stream(jsonArray)
-                    .forEach(entry -> {
-                        String[] elements = entry.split("=");
-                        reservedRoomTypes.put(Integer.valueOf(elements[0]), Integer.valueOf(elements[1]));
-                    });
+            Map<RoomType, Integer> reservedRoomTypes = reservedRoomQuantity.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> Integer.parseInt(entry.getValue())
+                    ));
             return isQuantityValid(reservedRoomTypes) && isAnyRoomReserved(reservedRoomTypes);
         } catch (NumberFormatException e){
             LOGGER.error(e.getMessage());
@@ -58,17 +58,17 @@ public class Validator {
         }
     }
 
-    private boolean isQuantityValid(Map<Integer, Integer> reservedRoomTypes) {
-        for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
-            if(entry.getKey() < 0 || entry.getValue() < 0) {
+    private boolean isQuantityValid(Map<RoomType, Integer> reservedRoomTypes) {
+        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
+            if(entry.getValue() < 0) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isAnyRoomReserved(Map<Integer, Integer> reservedRoomTypes){
-        for(Map.Entry<Integer, Integer> entry : reservedRoomTypes.entrySet()){
+    private boolean isAnyRoomReserved(Map<RoomType, Integer> reservedRoomTypes){
+        for(Map.Entry<RoomType, Integer> entry : reservedRoomTypes.entrySet()){
             if(entry.getValue() > 0) {
                 return true;
             }

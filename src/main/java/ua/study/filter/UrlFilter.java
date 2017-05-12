@@ -37,6 +37,7 @@ public class UrlFilter implements Filter {
         localAddresses.add(properties.getProperty("url.bill"));
         localAddresses.add(properties.getProperty("url.bill_handler"));
         localAddresses.add(properties.getProperty("url.my_reservations"));
+        localAddresses.add(properties.getProperty("url.confirmation"));
     }
 
         @Override
@@ -44,7 +45,7 @@ public class UrlFilter implements Filter {
         if (localAddresses.contains(((HttpServletRequest) servletRequest).getRequestURI())) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            servletRequest.getRequestDispatcher("/WEB-INF/jsp/bad_request.jsp")
+            servletRequest.getRequestDispatcher("/WEB-INF/jsp/404.jsp")
                     .include(servletRequest, servletResponse);
         }
     }

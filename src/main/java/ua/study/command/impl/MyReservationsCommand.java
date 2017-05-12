@@ -1,7 +1,7 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.dao.impl.executor.TransactionHelper;
+import ua.study.dao.impl.connection.TransactionHelper;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
 import ua.study.domain.User;
