@@ -3,6 +3,7 @@ package ua.study.dao.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.study.dao.AbstractDao;
+import ua.study.domain.Dates;
 import ua.study.domain.Reservation;
 import ua.study.domain.RoomType;
 import ua.study.domain.enums.Bedspace;
@@ -44,10 +45,10 @@ public class RoomTypeDao extends AbstractDao<RoomType> {
         return roomTypes;
     }
 
-    public Map<RoomType, Integer> getFreeRoomTypes(Reservation domain){
+    public Map<RoomType, Integer> getFreeRoomTypes(Dates dates){
         String query = properties.getProperty("get.free_room_type");
         Map<RoomType, Integer> freeRoomTypes = new LinkedHashMap<>();
-        getExecutor().getFreeRoomTypes(query, domain, result -> {
+        getExecutor().getFreeRoomTypes(query, dates, result -> {
             if(!(result.next())) return null;
             do {
                 RoomType roomType = getRoomType(result);

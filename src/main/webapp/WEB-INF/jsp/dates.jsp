@@ -8,37 +8,39 @@
 <!DOCTYPE html>
 <html lang="${language}">
 <head>
-    <%--<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>--%>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css" rel="stylesheet">
         <%@include file="/css/styles.css"%>
     </style>
     <title><fmt:message key="java.hotel"/></title>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script type="text/javascript">
-            $(function(){
-                $("#arriveDatepicker").datepicker({
-                    dateFormat: 'dd.mm.yy',
-                    changeMonth: true,
-                    numberOfMonths: 1,
-                    minDate: 0,
-                    maxDate: 365,
-                    onSelect: function(selectedDate) {
-                        const minDate = $.datepicker.parseDate("dd.mm.yy", selectedDate);
-                        minDate.setDate(minDate.getDate()+1);
-                        $('#departureDatepicker').datepicker("option", "minDate", minDate);
-                        const maxDate = new Date(minDate.getTime());
-                        maxDate.setDate(maxDate.getDate()+30);
-                        $('#departureDatepicker').datepicker("option", "maxDate", maxDate);
-                    }
-                }).datepicker("setDate", "0");
-                $("#departureDatepicker").datepicker({
-                    dateFormat: 'dd.mm.yy',
-                    changeMonth: true,
-                    numberOfMonths: 1
-                }).datepicker("setDate", "+1");
-            });
-        </script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function(){
+            var minDate = 1;
+            var maxDate = 366;
+            $("#arriveDatepicker").datepicker({
+                dateFormat: 'dd.mm.yy',
+                changeMonth: true,
+                minDate: 0,
+                maxDate: 365,
+                onSelect: function(selectedDate) {
+                    minDate = $.datepicker.parseDate("dd.mm.yy", selectedDate);
+                    minDate.setDate(minDate.getDate()+1);
+                    $('#departureDatepicker').datepicker("option", "minDate", minDate);
+                    maxDate = new Date(minDate.getTime());
+                    maxDate.setDate(maxDate.getDate()+30);
+                    $('#departureDatepicker').datepicker("option", "maxDate", maxDate);
+                }
+            }).datepicker("setDate", "0");
+            $("#departureDatepicker").datepicker({
+                dateFormat: 'dd.mm.yy',
+                changeMonth: true,
+                minDate: minDate,
+                maxDate: maxDate,
+            }).datepicker("setDate", "+1");
+        });
+    </script>
 </head>
 <body>
 <form style="float: right">
@@ -53,13 +55,13 @@
             <h1><fmt:message key="java.hotel"/></h1>
             <h2><fmt:message key="header.like_home"/></h2>
             <ul class="menu">
-                <li class="btn_1"><a href="<c:url value="/index.jsp"/>"><fmt:message key="header.home"/></a></li>
+                <li class="btn_1"><a href="./index"><fmt:message key="header.home"/></a></li>
                 <li class="line"></li>
-                <li class="btn_2"><a href="#"><fmt:message key="header.about"/></a></li>
+                <li class="btn_2"><a href="./dates"><fmt:message key="header.dates"/></a></li>
                 <li class="line"></li>
                 <li class="btn_3"><a href="./my_reservations"><fmt:message key="header.my_reservs"/></a></li>
                 <li class="line"></li>
-                <li class="btn_5"><a href="#"><fmt:message key="header.contacts"/></a></li>
+                <li class="btn_4"><a href="./contacts"><fmt:message key="header.contacts"/></a></li>
             </ul>
         </div>
         <div id="content">
@@ -97,10 +99,10 @@
             <div class="clear"></div>
         </div>
         <div id="footer">
-            <p><a href="<c:url value="/index.jsp"/>"><fmt:message key="header.home"/></a> |
-                <a href="#"><fmt:message key="header.about"/></a> |
-                <a href="#"><fmt:message key="footer.news"/></a> |
-                <a href="#"><fmt:message key="header.contacts"/></a><br/>
+            <p><a href="./index"><fmt:message key="header.home"/></a> |
+                <a href="./about"><fmt:message key="header.about"/></a> |
+                <a href="./news"><fmt:message key="footer.news"/></a> |
+                <a href="./contacts"><fmt:message key="header.contacts"/></a><br/>
         </div>
     </div>
 </form>

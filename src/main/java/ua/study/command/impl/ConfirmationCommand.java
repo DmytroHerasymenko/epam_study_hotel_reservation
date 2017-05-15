@@ -17,6 +17,7 @@ public class ConfirmationCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Reservation reservation = (Reservation) session.getAttribute("reservation");
+        session.removeAttribute("reservation");
 
         if(reservation == null || reservation.getReservationId() == 0){
             session.setAttribute("error", "error.filled_correct");
@@ -24,7 +25,6 @@ public class ConfirmationCommand implements Command {
             return;
         }
 
-        session.removeAttribute("reservation");
         request.setAttribute("reservation", reservation);
         request.getRequestDispatcher("/WEB-INF/jsp/confirmation.jsp").include(request, response);
     }

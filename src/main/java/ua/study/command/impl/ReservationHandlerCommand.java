@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class ReservationHandlerCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Map<RoomType, String> reservedRoomQuantity = getReservedRoomsQuantity(request);
+        Dates dates = (Dates) session.getAttribute("dates");
 
         if(!UtilFactory.getInstance().getValidator().isReservedRoomsQuantityValid(reservedRoomQuantity)){
             session.setAttribute("error", "error.choose_room");
@@ -32,6 +34,7 @@ public class ReservationHandlerCommand implements Command {
 
         Map<RoomType, Integer> reservedRoomTypes = getReservedRoomTypes(reservedRoomQuantity);
         session.setAttribute("reservedRoomTypes", reservedRoomTypes);
+        session.setAttribute("totalPrice", getTotalPrice(reservedRoomTypes, dates));
 
         response.sendRedirect("/bill");
     }
@@ -56,5 +59,14 @@ public class ReservationHandlerCommand implements Command {
                         (k,v)-> {throw new AssertionError();},
                         LinkedHashMap::new
                 ));
+    }
+
+    private double getTotalPrice(Map<RoomType, Integer> reservedRoomTypes, Dates dates){
+        double stayingPeriod = ChronoUnit.DAYS.between(dates.getArrivingDate(), dates.getDepartureDate());
+
+        final double[] totalPrice = {0};
+        reservedRoomTypes.forEach((key,value) -> totalPrice[0] += key.getPrice() * value);
+
+        return totalPrice[0] * stayingPeriod;
     }
 }

@@ -20,7 +20,7 @@
         <option value="ru" ${language == 'ru' ? 'selected' : ''}>Русский</option>
     </select>
 </form>
-<form action="./bill_handler" method="post">
+<form>
     <div id="container">
         <div id="header">
             <h1><fmt:message key="java.hotel"/></h1>
@@ -38,23 +38,10 @@
         <div id="content">
             <div id="panel">
                 <div id="welcome">
-                    <h2><fmt:message key="myreservs.my_reservs"/></h2>
+                    <h2><fmt:message key="info.contacts"/></h2>
                     <p id="side">
-                        <br>
-                        <span id="headline1" class="headline">
-                            <c:forEach var="reservation" items="${requestScope.reservations}">
-                                <fmt:message key="myreservs.reservation"/>#${reservation.reservationId}
-                                <fmt:message key="myreservs.reserv_date"/>: ${reservation.reservationDate}.
-                                <br>
-                                <fmt:message key="reserv.accomodation"/> ${reservation.arrivingDate}
-                                - ${reservation.departureDate}. <fmt:message key="confirm.rooms"/>:
-                                <c:forEach var="resRoom" items="${reservation.reservedRooms}">
-                                ${resRoom.roomNumber},
-                                </c:forEach>
-                                <br>
-                                -----------------------------------------------------------------------------------
-                                <br>
-                            </c:forEach>
+                        <span id="headline3" class="headline">
+                            <fmt:message key="info.contacts_info"/>
                         </span>
                     </p>
                     <div class="clear" id="welClear"></div>

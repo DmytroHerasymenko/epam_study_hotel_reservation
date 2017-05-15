@@ -2,12 +2,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored ="false" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="messages"/>
 <html>
 <head>
+
     <title>404</title>
 </head>
 <body>

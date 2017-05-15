@@ -21,19 +21,18 @@ public class BillHandlerCommand implements Command {
         HttpSession session = request.getSession(false);
 
         User client = (User) session.getAttribute("client");
+        Dates dates = (Dates) session.getAttribute("dates");
+        session.removeAttribute("dates");
         Map<RoomType, Integer> reservedRoomTypes = (Map<RoomType, Integer>) session.getAttribute("reservedRoomTypes");
-        Reservation reservation = (Reservation) session.getAttribute("reservation");
-        reservation.setClientLogin(client.getLogin());
+        session.removeAttribute("reservedRoomTypes");
 
         ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
-        reservation = reservationService.reservation(reservation, reservedRoomTypes);
+        Reservation reservation = reservationService.reservation(dates, client, reservedRoomTypes);
         if(reservation == null) {
             session.setAttribute("error", "error.no_rooms");
             response.sendRedirect("/reservation");
             return;
         }
-
-        session.removeAttribute("reservedRoomTypes");
 
         session.setAttribute("reservation", reservation);
         response.sendRedirect("/confirmation");

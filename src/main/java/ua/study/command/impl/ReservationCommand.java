@@ -1,6 +1,7 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
+import ua.study.domain.Dates;
 import ua.study.domain.Reservation;
 import ua.study.domain.RoomType;
 import ua.study.service.ServiceFactory;
@@ -20,17 +21,16 @@ public class ReservationCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
+        Dates dates = (Dates) session.getAttribute("dates");
 
-        if (session.getAttribute("reservation") == null) {
+        if (dates == null) {
             session.setAttribute("error", "error.dates_correct");
             response.sendRedirect("/dates");
             return;
         }
 
-        Reservation reservation = (Reservation) session.getAttribute("reservation");
-
         RoomTypeService roomTypeService = ServiceFactory.getInstance().getService(RoomTypeService.class);
-        Map<RoomType, Integer> freeRoomTypes = roomTypeService.getFreeRoomTypes(reservation);
+        Map<RoomType, Integer> freeRoomTypes = roomTypeService.getFreeRoomTypes(dates);
 
         request.setAttribute("freeRoomTypes", freeRoomTypes);
         request.getRequestDispatcher("/WEB-INF/jsp/reservation.jsp").include(request, response);

@@ -29,10 +29,8 @@ public class MyReservationsCommand implements Command {
         ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
         User client = (User) session.getAttribute("client");
 
-        TransactionHelper.getInstance().beginTransaction();
         List<Reservation> reservations = reservationService.getReservations(client);
         List<ReservedRoom> reservedRooms = reservedRoomService.getUserReservedRooms(reservations);
-        TransactionHelper.getInstance().commitTransaction();
 
         setReservedRooms(reservations, reservedRooms);
 

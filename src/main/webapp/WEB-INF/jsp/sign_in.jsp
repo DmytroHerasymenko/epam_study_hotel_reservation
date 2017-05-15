@@ -27,11 +27,13 @@
             <h1><fmt:message key="java.hotel"/></h1>
             <h2><fmt:message key="header.like_home"/></h2>
             <ul class="menu">
-                <li class="btn_1"><a href="<c:url value="/index.jsp"/>"><fmt:message key="header.home"/></a></li>
+                <li class="btn_1"><a href="./index"><fmt:message key="header.home"/></a></li>
                 <li class="line"></li>
-                <li class="btn_2"><a href="#"><fmt:message key="header.about"/></a></li>
+                <li class="btn_2"><a href="./dates"><fmt:message key="header.dates"/></a></li>
                 <li class="line"></li>
-                <li class="btn_5"><a href="#"><fmt:message key="header.contacts"/></a></li>
+                <li class="btn_3"><a href="./my_reservations"><fmt:message key="header.my_reservs"/></a></li>
+                <li class="line"></li>
+                <li class="btn_4"><a href="./contacts"><fmt:message key="header.contacts"/></a></li>
             </ul>
         </div>
         <div id="content">
@@ -71,10 +73,10 @@
             <div class="clear"></div>
         </div>
         <div id="footer">
-            <p><a href="<c:url value="/index.jsp"/>"><fmt:message key="header.home"/></a> |
-                <a href="#"><fmt:message key="header.about"/></a> |
-                <a href="#"><fmt:message key="footer.news"/></a> |
-                <a href="#"><fmt:message key="header.contacts"/></a><br/>
+            <p><a href="./index"><fmt:message key="header.home"/></a> |
+                <a href="./about"><fmt:message key="header.about"/></a> |
+                <a href="./news"><fmt:message key="footer.news"/></a> |
+                <a href="./contacts"><fmt:message key="header.contacts"/></a><br/>
         </div>
     </div>
 </form>

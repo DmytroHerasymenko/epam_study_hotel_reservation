@@ -18,14 +18,14 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <!--<filter>
+    <filter>
         <filter-name>urlFilter</filter-name>
         <filter-class>ua.study.filter.UrlFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>urlFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
     <filter>
         <filter-name>signInFilter</filter-name>
         <filter-class>ua.study.filter.SignInFilter</filter-class>
@@ -39,6 +39,7 @@
         <url-pattern>/bill</url-pattern>
         <url-pattern>/bill_handler</url-pattern>
         <url-pattern>/my_reservations</url-pattern>
+        <url-pattern>/confirmation</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>errorMessageFilter</filter-name>

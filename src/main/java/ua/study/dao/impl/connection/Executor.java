@@ -2,10 +2,7 @@ package ua.study.dao.impl.connection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.study.domain.Bill;
-import ua.study.domain.Reservation;
-import ua.study.domain.ReservedRoom;
-import ua.study.domain.User;
+import ua.study.domain.*;
 
 import java.sql.*;
 import java.util.List;
@@ -54,11 +51,11 @@ public class Executor {
         }
     }
 
-    public boolean insertReservedRoom(Reservation reservation, List<ReservedRoom> reservedRooms, String query){
+    public boolean insertReservedRoom(Dates dates, List<ReservedRoom> reservedRooms, String query){
         try (ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         PreparedStatement statement = connectionProxy.prepareStatement(query)) {
             for(ReservedRoom reservedRoom : reservedRooms){
-                setTimestamp(reservation, statement);
+                setTimestamp(dates, statement);
                 statement.setInt(7, reservedRoom.getRoomTypeId());
                 statement.setLong(8, reservedRoom.getReservationId());
                 statement.setInt(9, reservedRoom.getRoomTypeId());
@@ -158,7 +155,7 @@ public class Executor {
         }
     }
 
-    public <T> T getFreeRoomTypes(String query, Reservation domain, ResultHandler<T> handler) {
+    public <T> T getFreeRoomTypes(String query, Dates domain, ResultHandler<T> handler) {
         try (ConnectionProxy connectionProxy = TransactionHelper.getInstance().getConnection();
         PreparedStatement statement = connectionProxy.prepareStatement(query)) {
             setTimestamp(domain, statement);
@@ -172,7 +169,7 @@ public class Executor {
         }
     }
 
-    private void setTimestamp(Reservation domain, PreparedStatement statement) throws SQLException {
+    private void setTimestamp(Dates domain, PreparedStatement statement) throws SQLException {
         Timestamp arrive = Timestamp.valueOf(domain.getArrivingDate().atStartOfDay());
         Timestamp departure = Timestamp.valueOf(domain.getDepartureDate().atStartOfDay());
         statement.setTimestamp(1, arrive);
