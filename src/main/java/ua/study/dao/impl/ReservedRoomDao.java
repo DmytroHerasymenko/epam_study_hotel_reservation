@@ -3,7 +3,8 @@ package ua.study.dao.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.study.dao.AbstractDao;
-import ua.study.dao.impl.executor.ResultHandler;
+import ua.study.dao.impl.connection.ResultHandler;
+import ua.study.domain.Dates;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
 import ua.study.domain.enums.Bedspace;
@@ -32,8 +33,8 @@ public class ReservedRoomDao extends AbstractDao<ReservedRoom> {
         getExecutor().executorUpdate(properties.getProperty("create.res_room"));
     }
 
-    public boolean insert(Reservation reservation, List<ReservedRoom> reservedRooms) {
-        return getExecutor().insertReservedRoom(reservation, reservedRooms, properties.getProperty("insert.res_room"));
+    public boolean insert(Dates dates, List<ReservedRoom> reservedRooms) {
+        return getExecutor().insertReservedRoom(dates, reservedRooms, properties.getProperty("insert.res_room"));
     }
 
     public List<ReservedRoom> get(Reservation domain){

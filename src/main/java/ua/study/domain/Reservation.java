@@ -62,9 +62,9 @@ public class Reservation {
 
     public void setReservedRooms(List<ReservedRoom> reservedRooms) {
         this.reservedRooms = reservedRooms;
-        for(ReservedRoom reservedRoom : this.reservedRooms){
-            totalPrice += reservedRoom.getPrice();
-        }
+        totalPrice = 0;
+        reservedRooms.forEach(reservedRoom -> totalPrice += reservedRoom.getPrice());
+
         double stayingPeriod = ChronoUnit.DAYS.between(arrivingDate, departureDate);
         totalPrice = totalPrice * stayingPeriod;
     }

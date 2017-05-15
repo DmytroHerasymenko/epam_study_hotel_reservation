@@ -8,7 +8,7 @@ import java.sql.*;
 /**
  * Created by dima on 04.04.17.
  */
-public class ConnectionProxy {
+public class ConnectionProxy implements AutoCloseable {
     private final Connection connection;
     private final Logger LOGGER = LogManager.getLogger(ConnectionProxy.class.getName());
 
@@ -52,11 +52,13 @@ public class ConnectionProxy {
         return connection.createArrayOf(type, array);
     }
 
-    public void close(){
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            LOGGER.error("some problem with database connection ", e);
+    public void close() {
+        if (!TransactionHelper.getInstance().isTransactionActive()) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                LOGGER.error("some problem with database connection ", e);
+            }
         }
     }
 }

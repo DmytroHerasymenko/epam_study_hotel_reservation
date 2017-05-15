@@ -1,6 +1,7 @@
 package ua.study.command;
 
 import ua.study.command.impl.*;
+import ua.study.command.impl.info.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -39,5 +40,10 @@ public class CommandFactory {
         commands.put("/bill", new BillCommand());
         commands.put("/bill_handler", new BillHandlerCommand());
         commands.put("/my_reservations", new MyReservationsCommand());
+        commands.put("/confirmation", new ConfirmationCommand());
+        commands.put("/index", new IndexCommand());
+        commands.put("/news", new NewsCommand());
+        commands.put("/about", new AboutCommand());
+        commands.put("/contacts", new ContactsCommand());
     }
 }

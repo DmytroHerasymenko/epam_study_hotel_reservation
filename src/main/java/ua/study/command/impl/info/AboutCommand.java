@@ -1,4 +1,4 @@
-package ua.study.command.impl;
+package ua.study.command.impl.info;
 
 import ua.study.command.Command;
 
@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by dima on 18.04.17.
+ * Created by dima on 13.05.17.
  */
-public class DatesCommand implements Command {
+public class AboutCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/dates.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/about.jsp").include(request, response);
     }
 }

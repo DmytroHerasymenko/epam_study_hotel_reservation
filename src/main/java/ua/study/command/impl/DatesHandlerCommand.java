@@ -29,16 +29,16 @@ public class DatesHandlerCommand implements Command {
             return;
         }
 
-        Reservation reservation = getReservationDates(arriveDate, departureDate);
-        session.setAttribute("reservation", reservation);
+        Dates dates = getDates(arriveDate, departureDate);
+        session.setAttribute("dates", dates);
         response.sendRedirect("/reservation");
     }
 
-    private Reservation getReservationDates(String arriveDate, String departureDate) {
+    private Dates getDates(String arriveDate, String departureDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        Reservation reservation = new Reservation();
-        reservation.setArrivingDate(LocalDate.parse(arriveDate, formatter));
-        reservation.setDepartureDate(LocalDate.parse(departureDate, formatter));
-        return reservation;
+        Dates dates = new Dates();
+        dates.setArrivingDate(LocalDate.parse(arriveDate, formatter));
+        dates.setDepartureDate(LocalDate.parse(departureDate, formatter));
+        return dates;
     }
 }

@@ -1,6 +1,6 @@
 package ua.study.dao;
 
-import ua.study.dao.impl.executor.Executor;
+import ua.study.dao.impl.connection.Executor;
 
 /**
  * Created by dima on 30.03.17.

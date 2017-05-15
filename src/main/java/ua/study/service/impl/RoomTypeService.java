@@ -2,6 +2,7 @@ package ua.study.service.impl;
 
 import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.RoomTypeDao;
+import ua.study.domain.Dates;
 import ua.study.domain.Reservation;
 import ua.study.domain.RoomType;
 import ua.study.service.Service;
@@ -14,9 +15,9 @@ import java.util.Map;
  */
 public class RoomTypeService implements Service{
 
-    public Map<RoomType, Integer> getFreeRoomTypes(Reservation reservation){
+    public Map<RoomType, Integer> getFreeRoomTypes(Dates dates){
         RoomTypeDao roomTypeDao = DaoFactory.getInstance().getDao(RoomTypeDao.class);
-        return roomTypeDao.getFreeRoomTypes(reservation);
+        return roomTypeDao.getFreeRoomTypes(dates);
     }
 
     public List<RoomType> getRoomTypes(){

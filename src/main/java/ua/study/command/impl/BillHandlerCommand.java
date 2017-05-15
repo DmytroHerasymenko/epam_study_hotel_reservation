@@ -20,22 +20,21 @@ public class BillHandlerCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
-        Map<RoomType, Integer> reservedRoomTypes = (Map<RoomType, Integer>) session.getAttribute("reservedRoomTypes");
         User client = (User) session.getAttribute("client");
-        Reservation reservation = (Reservation) session.getAttribute("reservation");
-        reservation.setClientLogin(client.getLogin());
+        Dates dates = (Dates) session.getAttribute("dates");
+        session.removeAttribute("dates");
+        Map<RoomType, Integer> reservedRoomTypes = (Map<RoomType, Integer>) session.getAttribute("reservedRoomTypes");
+        session.removeAttribute("reservedRoomTypes");
 
         ReservationService reservationService = ServiceFactory.getInstance().getService(ReservationService.class);
-        reservation = reservationService.reservation(reservation, reservedRoomTypes);
+        Reservation reservation = reservationService.reservation(dates, client, reservedRoomTypes);
         if(reservation == null) {
             session.setAttribute("error", "error.no_rooms");
             response.sendRedirect("/reservation");
             return;
         }
 
-        request.setAttribute("reservation", reservation);
-        session.removeAttribute("reservation");
-        session.removeAttribute("reservedRoomTypes");
-        request.getRequestDispatcher("/WEB-INF/jsp/confirmation.jsp").include(request, response);
+        session.setAttribute("reservation", reservation);
+        response.sendRedirect("/confirmation");
     }
 }

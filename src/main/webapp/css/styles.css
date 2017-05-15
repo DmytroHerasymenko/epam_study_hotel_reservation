@@ -1,0 +1,72 @@
+/* CSS Document */
+body{padding:0;  margin:0;  background:#ddcfb5;  color:#969686;  font:10px/14px Tahoma, sans-serif;}
+div, p, ul, h2, h3, h4, img{padding:0; margin:0;}
+ul{list-style-type:none;}
+
+.clear {clear: both; margin: 0; height:0}
+
+p a{font:10px/14px Tahoma, sans-serif; color:#a06916; text-decoration:underline;}
+p a:hover{ color:#000; text-decoration:none;}
+
+p a.a2{font:10px/14px Tahoma, sans-serif; color:#969686; text-decoration:underline;}
+p a.a2:hover{ color:#000; text-decoration:none;}
+
+.headline{font:14px/16px "Trebuchet MS", Arial, Helvetica, sans-serif; color:#3f3128; font-weight:bold}
+
+#container{width:775px; position:relative; margin:0 auto;}
+
+/* HEADER */
+
+#header{  width: 775px;  height: 287px; position:relative; background:url(../images/b_header.jpg) 0 0 no-repeat}
+
+#header h1{position:absolute;  top: 27px;  left: 71px; color: black}
+#header h2{position:absolute;  top: 240px;  left: 45px; color: white}
+
+#header ul.menu{position:absolute;  top: 32px;  left: 341px;  width: 420px;}
+#header ul.menu li{height:23px; margin-right:17px; float:left;}
+#header ul.menu li a{  height: 23px;}
+#header ul.menu li a:hover{height:23px;}
+
+#header ul.menu li.btn_1 a{width:33px; color: black; }
+#header ul.menu li.btn_1 a:hover{width:33px; color: white;}
+
+#header ul.menu li.btn_2 a{width:35px; color: black; }
+#header ul.menu li.btn_2 a:hover{width:35px; color: white;}
+
+#header ul.menu li.btn_3 a{width:49px; color: black; }
+#header ul.menu li.btn_3 a:hover{width:49px; color: white;}
+
+#header ul.menu li.btn_4 a{width:46px; color: black; }
+#header ul.menu li.btn_4 a:hover{width:46px; color: white;}
+
+#header ul.menu li.btn_5{margin-right:0}
+#header ul.menu li.btn_5 a{width:52px; color: black; }
+#header ul.menu li.btn_5 a:hover{width:52px; color: white;}
+
+#header ul.menu li.line{width:2px; background:url(../images/line_m.gif) 0 0 no-repeat}
+
+/* CONTENT */
+
+#content{width:675px; position:relative; clear:both; background:#fff; margin-left:50px}
+
+#panel{width:675px; margin:21px 25px 0 28px; display:inline}
+
+#welcome{margin-bottom:20px}
+#welcome h2{height:32px; position:relative; color: black; margin-bottom:10px}
+#welcome img{float:left; margin-right:11px; margin-left:3px;}
+#welcome p{margin-left:3px}
+#welcome p#side{width:675px; margin-left:0}
+#welcome p#side span#headline1{display:block; margin-bottom:8px}
+#welcome p#side span#headline2{display:block; margin-bottom:8px}
+#welcome p#side span#headline3{display:block; margin-bottom:8px}
+#welcome p#side span#error{color: red}
+
+#welcome ul.input-requirements{ position:relative; left: 174px; color: forestgreen  }
+.clear#welClear{height:6px}
+
+/* FOOTER */
+
+#footer{height:61px; clear:both; width:775px;}
+#footer p{padding: 15px 0 0 0; font:11px/16px Tahoma, sans-serif; font-weight:normal; text-align:center; color:#3f3128;}
+#footer p a{font:11px/16px Tahoma, sans-serif; font-weight:normal; color:#3f3128; text-decoration:none; padding: 0 3px }
+#footer p a:hover{text-decoration:underline; color:#3f3128}

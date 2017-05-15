@@ -4,7 +4,7 @@ import ua.study.dao.DaoFactory;
 import ua.study.dao.impl.BillDao;
 import ua.study.dao.impl.ReservationDao;
 import ua.study.dao.impl.ReservedRoomDao;
-import ua.study.dao.impl.executor.TransactionHelper;
+import ua.study.dao.impl.connection.TransactionHelper;
 import ua.study.domain.*;
 import ua.study.service.Service;
 
@@ -17,13 +17,17 @@ import java.util.Map;
  */
 public class ReservationService implements Service {
 
-    public Reservation reservation(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
+    public Reservation reservation(Dates dates, User client, Map<RoomType, Integer> reservedRoomTypes){
         ReservationDao reservationDao = DaoFactory.getInstance().getDao(ReservationDao.class);
+        Reservation reservation = new Reservation();
+        reservation.setClientLogin(client.getLogin());
+        reservation.setArrivingDate(dates.getArrivingDate());
+        reservation.setDepartureDate(dates.getDepartureDate());
 
         TransactionHelper.getInstance().beginTransaction();
         Long reservationId = reservationDao.insert(reservation);
         reservation.setReservationId(reservationId);
-        boolean isSuccess = reservationRooms(reservation, reservedRoomTypes);
+        boolean isSuccess = reservationRooms(dates, reservation, reservedRoomTypes);
         if(!isSuccess){
             TransactionHelper.getInstance().rollbackTransaction();
             return null;
@@ -39,14 +43,14 @@ public class ReservationService implements Service {
         return reservationDao.get(user);
     }
 
-    private boolean reservationRooms(Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
+    private boolean reservationRooms(Dates dates, Reservation reservation, Map<RoomType, Integer> reservedRoomTypes){
         ReservedRoomDao reservedRoomDao = DaoFactory.getInstance().getDao(ReservedRoomDao.class);
         List<ReservedRoom> reservedRooms = new ArrayList<>();
 
         reservedRoomTypes.forEach((key, value) ->
                 setReservedRooms(reservedRooms, key.getRoomTypeId(), value, reservation));
 
-        boolean isSuccess = reservedRoomDao.insert(reservation, reservedRooms);
+        boolean isSuccess = reservedRoomDao.insert(dates, reservedRooms);
         if(isSuccess) {
             reservation.setReservedRooms(reservedRoomDao.get(reservation));
         }

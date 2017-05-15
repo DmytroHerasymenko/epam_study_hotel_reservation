@@ -1,7 +1,7 @@
 package ua.study.command.impl;
 
 import ua.study.command.Command;
-import ua.study.dao.impl.executor.TransactionHelper;
+import ua.study.dao.impl.connection.TransactionHelper;
 import ua.study.domain.Reservation;
 import ua.study.domain.ReservedRoom;
 import ua.study.domain.User;
@@ -29,10 +29,8 @@ public class MyReservationsCommand implements Command {
         ReservedRoomService reservedRoomService = ServiceFactory.getInstance().getService(ReservedRoomService.class);
         User client = (User) session.getAttribute("client");
 
-        TransactionHelper.getInstance().beginTransaction();
         List<Reservation> reservations = reservationService.getReservations(client);
         List<ReservedRoom> reservedRooms = reservedRoomService.getUserReservedRooms(reservations);
-        TransactionHelper.getInstance().commitTransaction();
 
         setReservedRooms(reservations, reservedRooms);
 
