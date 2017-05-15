@@ -44,7 +44,6 @@ public class UrlFilter implements Filter {
         localAddresses.add(properties.getProperty("url.contacts"));
         localAddresses.add(properties.getProperty("url.news"));
         localAddresses.add(properties.getProperty("url.about"));
-        localAddresses.add(properties.getProperty("a"));
     }
 
         @Override
